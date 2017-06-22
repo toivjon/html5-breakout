@@ -81,9 +81,44 @@ var breakout = (function () {
 
   var courtScene = (function () {
 
+    /** The divisor size of the vertical wall width related to canvas width. */
+    var VERTICAL_WALL_WIDTH_DIVISOR = 30;
+
+    var leftWall;
+    var rightWall;
+    var topWall;
+
+    // ========================================================================
+    /**
+     * A visible and collideable static wall entity.
+     * @param {*} x The x-position of the wall.
+     * @param {*} y The y-position of the wall.
+     * @param {*} width The width of the wall.
+     * @param {*} height The height of the wall.
+     */
+    var wall = (function (x, y, width, height) {
+
+      function draw() {
+        ctx.fillRect(x, y, width, height);
+      }
+
+      return {
+        draw: draw
+      }
+    });
+
     /** A function that is called when the game enters this scene. */
     function enter() {
-      // TODO
+      // build the vertical wall at the left side of the court.
+      var wallThickness = (canvas.width / VERTICAL_WALL_WIDTH_DIVISOR);
+      leftWall = wall(0, 0, wallThickness, canvas.height);
+
+      // build the vertical wall at the right side of the court.
+      var x = (canvas.width - wallThickness);
+      rightWall = wall(x, 0, wallThickness, canvas.height);
+
+      // builkd the top wall at the top of the court.
+      topWall = wall(0, 0, canvas.width, wallThickness);
     }
 
     /** A function that is called when the game exists this scene. */
@@ -98,7 +133,9 @@ var breakout = (function () {
 
     /** A funcion that is called on each rendering frame iteration. */
     function draw() {
-      // TODO
+      leftWall.draw();
+      rightWall.draw();
+      topWall.draw();
     }
 
     return {
@@ -156,7 +193,7 @@ var breakout = (function () {
     ctx.textAlign = "center";
 
     // set the welcome scene as the initial scene.
-    setScene(welcomeScene);
+    setScene(courtScene);
   }
 
   /**
