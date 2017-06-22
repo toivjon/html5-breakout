@@ -38,9 +38,17 @@ var breakout = (function () {
 
     /** A funcion that is called on each rendering frame iteration. */
     function draw() {
+      // calculate the center coordinates of the canvas.
+      var center = [(canvas.width / 2), (canvas.height / 2)];
+
       // draw the application name string.
       ctx.font = "32pt Arial";
-      ctx.fillText("HTML5 BREAKOUT", canvas.width / 2, 100);
+      ctx.fillText("HTML5 BREAKOUT", center[0], center[1] - 100);
+
+      // draw the number of players selection instruction strings.
+      ctx.font = "24pt Arial";
+      ctx.fillText("Press [1] to start a single player game.", center[0], center[1]);
+      ctx.fillText("Press [2] to start a two player game.", center[0], center[1] + 50);
     }
 
     /**
@@ -159,11 +167,14 @@ var breakout = (function () {
    * browser tab or the JavaScript catches an exception from the code.
    */
   function run() {
-    // TODO ...
+    // TODO calculate delta time and call scene update.
 
     // swipe old contents from the draw buffer and draw the scene.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     scene.draw();
+
+    // perform a main loop iteration.
+    requestAnimationFrame(run);
   }
 
   /**
