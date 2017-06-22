@@ -81,12 +81,10 @@ var breakout = (function () {
 
   var courtScene = (function () {
 
-    /** The divisor of the static wall thickness related to canvas width. */
-    var WALL_THICKNESS_DIVISOR = 30;
-    /** The divisor of the ball thickness related to canvas width. */
-    var BALL_THICKNESS_DIVISOR = 30;
-    /** The divisor of the paddle width related to canvas width. */
-    var PADDLE_WIDTH_DIVISOR = 10;
+    /** The divisor of the slot width related to canvas width. */
+    var SLOT_WIDTH_DIVISOR = 15;
+    /** The divisor of the slot height releated to canvas width. */
+    var SLOT_HEIGHT_DIVISOR = 45;
 
     // ========================================================================
     /**
@@ -174,36 +172,204 @@ var breakout = (function () {
       this.fillStyle = "cyan";
     }
 
+    // ========================================================================
+    /**
+     * A constructor for a single digit instance within the court scene.
+     * @param {*} x The x-position of the digit.
+     * @param {*} y The y-position of the digit.
+     * @param {*} width The width of the digit.
+     * @param {*} height The height of the digit.
+     */
+    function Digit(x, y, width, height) {
+      Drawable.call(this, x, y, width, height);
+      this.value = 0;
+
+      /** The index for the topmost horizontal line. */
+      var HLINE_TOP = 0;
+      /** The index for the middle horizontal line. */
+      var HLINE_MIDDLE = 1;
+      /** The index for the bottom horizontal line. */
+      var HLINE_BOTTOM = 2;
+
+      /** The index for the topleft vertical line. */
+      var VLINE_LEFT_TOP = 0;
+      /** The index for the bottomleft vertical line. */
+      var VLINE_LEFT_BOTTOM = 1;
+      /** The index for the topright vertical line. */
+      var VLINE_RIGHT_TOP = 2;
+      /** The index for the bottomright vertical line. */
+      var VLINE_RIGHT_BOTTOM = 3;
+      /** The index for the center vertical line. */
+      var VLINE_CENTER = 4;
+
+      /** The thickness used to draw the borders of the numbers. */
+      var thickness = (height / 5);
+
+      /** Horizontal line draw instructions. */
+      var hlines = [];
+      hlines[HLINE_TOP] = [x, y, width, thickness];
+      hlines[HLINE_MIDDLE] = [x, y + (height / 2) - thickness / 2, width, thickness];
+      hlines[HLINE_BOTTOM] = [x, y + (height - thickness), width, thickness];
+
+      /** Vertical line draw instructions. */
+      var vlines = [];
+      vlines[VLINE_LEFT_TOP] = [x, y, thickness, Math.ceil(height / 2)];
+      vlines[VLINE_LEFT_BOTTOM] = [x, y + height / 2, thickness, height / 2];
+      vlines[VLINE_RIGHT_TOP] = [x + width - thickness, y, thickness, Math.ceil(height / 2)];
+      vlines[VLINE_RIGHT_BOTTOM] = [x + width - thickness, y + height / 2, thickness, height / 2];
+      vlines[VLINE_CENTER] = [x + width / 2 - thickness, y, thickness, height];
+
+      /**
+       * Draw the given line instructions on the canvas.
+       * @param {[]} line A line instruction set to be drawn.
+       */
+      function drawLine(line) {
+        ctx.fillRect(line[0], line[1], line[2], line[3]);
+      }
+
+      this.draw = function () {
+        ctx.fillStyle = "white";
+        switch (this.value) {
+          case 0:
+            drawLine(hlines[HLINE_TOP]);
+            drawLine(hlines[HLINE_BOTTOM]);
+            drawLine(vlines[VLINE_LEFT_TOP]);
+            drawLine(vlines[VLINE_LEFT_BOTTOM]);
+            drawLine(vlines[VLINE_RIGHT_TOP]);
+            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+            break;
+          case 1:
+            drawLine(vlines[VLINE_RIGHT_TOP]);
+            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+            break;
+          case 2:
+            drawLine(hlines[HLINE_TOP]);
+            drawLine(hlines[HLINE_MIDDLE]);
+            drawLine(hlines[HLINE_BOTTOM]);
+            drawLine(vlines[VLINE_LEFT_BOTTOM]);
+            drawLine(vlines[VLINE_RIGHT_TOP]);
+            break;
+          case 3:
+            drawLine(hlines[HLINE_TOP]);
+            drawLine(hlines[HLINE_MIDDLE]);
+            drawLine(hlines[HLINE_BOTTOM]);
+            drawLine(vlines[VLINE_RIGHT_TOP]);
+            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+            break;
+          case 4:
+            drawLine(hlines[HLINE_MIDDLE]);
+            drawLine(vlines[VLINE_LEFT_TOP]);
+            drawLine(vlines[VLINE_RIGHT_TOP]);
+            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+            break;
+          case 5:
+            drawLine(hlines[HLINE_TOP]);
+            drawLine(hlines[HLINE_MIDDLE]);
+            drawLine(hlines[HLINE_BOTTOM]);
+            drawLine(vlines[VLINE_LEFT_TOP]);
+            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+            break;
+          case 6:
+            drawLine(hlines[HLINE_TOP]);
+            drawLine(hlines[HLINE_MIDDLE]);
+            drawLine(hlines[HLINE_BOTTOM]);
+            drawLine(vlines[VLINE_LEFT_TOP]);
+            drawLine(vlines[VLINE_LEFT_BOTTOM]);
+            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+            break;
+          case 7:
+            drawLine(hlines[HLINE_TOP]);
+            drawLine(vlines[VLINE_RIGHT_TOP]);
+            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+            break;
+          case 8:
+            drawLine(hlines[HLINE_TOP]);
+            drawLine(hlines[HLINE_MIDDLE]);
+            drawLine(hlines[HLINE_BOTTOM]);
+            drawLine(vlines[VLINE_LEFT_TOP]);
+            drawLine(vlines[VLINE_LEFT_BOTTOM]);
+            drawLine(vlines[VLINE_RIGHT_TOP]);
+            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+            break;
+          case 9:
+            drawLine(hlines[HLINE_TOP]);
+            drawLine(hlines[HLINE_MIDDLE]);
+            drawLine(hlines[HLINE_BOTTOM]);
+            drawLine(vlines[VLINE_LEFT_TOP]);
+            drawLine(vlines[VLINE_RIGHT_TOP]);
+            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+            break;
+          default:
+            break;
+        }
+      }
+    }
+
     var leftWall;
     var rightWall;
     var topWall;
     var ball;
     var paddle;
+    var playerIndexDigit;
+    var playerBallIndexDigit;
+
+    /** The currently active player as a zero based index (0|1). */
+    var activePlayer = 0;
+    /** The definition of the current level (0-based) for both players. */
+    var playerLevel = [0, 0];
+    /** A definition of the current ball index for both players. */
+    var playerBallIndex = [1, 1];
+    /** The bricks for the particular level (0-based) for both players. */
+    var playerBricks = [[], []];
 
     /** A function that is called when the game enters this scene. */
     function enter() {
+      // precalculate some relative size definitions.
+      var slotWidth = (canvas.width / SLOT_WIDTH_DIVISOR);
+      var slotHeight = (canvas.width / SLOT_HEIGHT_DIVISOR);
+      var digitHeight = (slotHeight * 5);
+
       // build the vertical wall at the left side of the court.
-      var wallThickness = (canvas.width / WALL_THICKNESS_DIVISOR);
-      leftWall = new Wall(0, 0, wallThickness, canvas.height);
+      leftWall = new Wall(0, 0, slotHeight, canvas.height);
 
       // build the vertical wall at the right side of the court.
-      var x = (canvas.width - wallThickness);
-      rightWall = new Wall(x, 0, wallThickness, canvas.height);
+      var x = (canvas.width - slotHeight);
+      rightWall = new Wall(x, 0, slotHeight, canvas.height);
 
       // build the top wall at the top of the court.
-      topWall = new Wall(0, 0, canvas.width, wallThickness);
+      topWall = new Wall(0, 0, canvas.width, slotHeight);
 
       // build the ball of the court.
-      var ballThickness = (canvas.width / BALL_THICKNESS_DIVISOR);
-      var x = ((canvas.width / 2) - (ballThickness / 2));
-      var y = ((canvas.height / 2) - (ballThickness / 2));
-      ball = new Ball(x, y, ballThickness, ballThickness);
+      var x = ((canvas.width / 2) - (slotHeight / 2));
+      var y = ((canvas.height / 2) - (slotHeight / 2));
+      ball = new Ball(x, y, slotHeight, slotHeight);
 
       // build the paddle for the player.
-      var paddleWidth = (canvas.width / PADDLE_WIDTH_DIVISOR);
-      var x = (canvas.width / 2) - (paddleWidth / 2);
+      var x = (canvas.width / 2) - (slotWidth / 2);
       var y = (canvas.height - 100);
-      paddle = new Paddle(x, y, paddleWidth, ballThickness);
+      paddle = new Paddle(x, y, slotWidth, slotHeight);
+
+      // build the digit indicating the current player.
+      var x = slotHeight;
+      var y = 80;
+      playerIndexDigit = new Digit(x, y, slotWidth, digitHeight);
+      playerIndexDigit.value = (activePlayer + 1);
+
+      // build the digit indicating the current ball index.
+      var x = (canvas.width / 2);
+      var y = 80;
+      playerBallIndexDigit = new Digit(x, y, slotWidth, digitHeight);
+      playerBallIndexDigit.value = playerBallIndex[activePlayer];
+
+      // initialize bricks for the first player.
+      // TODO playerbricks[0][0].push();
+      // TODO playerbricks[0][1].push();
+
+      // initialize bricks for the second player.
+      if (players == 2) {
+        // TODO playerbricks[1][0].push();
+        // TODO playerbricks[1][1].push();
+      }
     }
 
     /** A function that is called when the game exists this scene. */
@@ -223,6 +389,8 @@ var breakout = (function () {
       topWall.draw();
       ball.draw();
       paddle.draw();
+      playerIndexDigit.draw();
+      playerBallIndexDigit.draw();
     }
 
     return {
