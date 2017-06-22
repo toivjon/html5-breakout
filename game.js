@@ -103,6 +103,26 @@ var breakout = (function () {
 
     // ========================================================================
     /**
+     * A constructor for all drawable entities within the court scene.
+     * @param {*} x The x-position of the drawable entity.
+     * @param {*} y The y-position of the drawable entity.
+     * @param {*} width The width of the drawable entity.
+     * @param {*} height The height of the drawable entity.
+     */
+    function Drawable(x, y, width, height) {
+      Entity.call(this, x, y, width, height);
+      this.fillStyle = "white";
+      this.visible = true;
+      this.draw = function () {
+        if (this.visible == true) {
+          ctx.fillStyle = this.fillStyle;
+          ctx.fillRect(x, y, width, height);
+        }
+      }
+    }
+
+    // ========================================================================
+    /**
      * A constructor for all collideable entities within the court scene.
      * @param {*} x The x-position of the collideable entity.
      * @param {*} y The y-position of the collideable entity.
@@ -110,7 +130,7 @@ var breakout = (function () {
      * @param {*} height The height of the collideable entity.
      */
     function Collideable(x, y, width, height) {
-      Entity.call(this, x, y, width, height);
+      Drawable.call(this, x, y, width, height);
       this.extent = [width / 2, height / 2];
       this.center = [x + this.extent[0], y + this.extent[1]];
     }
@@ -125,9 +145,6 @@ var breakout = (function () {
      */
     function Wall(x, y, width, height) {
       Collideable.call(this, x, y, width, height);
-      this.draw = function () {
-        ctx.fillRect(x, y, width, height);
-      }
     }
 
     // ========================================================================
@@ -140,12 +157,6 @@ var breakout = (function () {
      */
     function Ball(x, y, width, height) {
       Collideable.call(this, x, y, width, height);
-      this.visible = true;
-      this.draw = function () {
-        if (this.visible) {
-          ctx.fillRect(x, y, width, height);
-        }
-      }
     }
 
     var leftWall;
