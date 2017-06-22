@@ -342,29 +342,28 @@ var breakout = (function () {
       // precalculate some relative size definitions.
       var slotWidth = (canvas.width / SLOT_WIDTH_DIVISOR);
       var slotHeight = (canvas.width / SLOT_HEIGHT_DIVISOR);
+      var slotHalfWidth = (slotWidth / 2);
+      var slotHalfHeight = (slotHeight / 2);
       var digitHeight = (slotHeight * 5);
+      var canvasHalfWidth = (canvas.width / 2);
+      var canvasHalfHeight = (canvas.height / 2);
 
       // calculate the amount of spacing we can reserve between the slots.
       // NOTE: spacing is based on the free space after 2 walls and 14 bricks.
       var slotSpacing = (canvas.width - (2 * slotHeight) - (14 * slotWidth)) / 13;
 
-      // build the vertical wall at the left side of the court.
+      // build the left, right and top wall for the court.
       leftWall = new Wall(0, 0, slotHeight, canvas.height);
-
-      // build the vertical wall at the right side of the court.
-      var x = (canvas.width - slotHeight);
-      rightWall = new Wall(x, 0, slotHeight, canvas.height);
-
-      // build the top wall at the top of the court.
+      rightWall = new Wall((canvas.width - slotHeight), 0, slotHeight, canvas.height);
       topWall = new Wall(0, 0, canvas.width, slotHeight);
 
       // build the ball of the court.
-      var x = ((canvas.width / 2) - (slotHeight / 2));
-      var y = ((canvas.height / 2) - (slotHeight / 2));
+      var x = (canvasHalfWidth - slotHalfHeight);
+      var y = (canvasHalfHeight - slotHalfHeight);
       ball = new Ball(x, y, slotHeight, slotHeight);
 
       // build the paddle for the player.
-      var x = (canvas.width / 2) - (slotWidth / 2);
+      var x = (canvasHalfWidth - slotHalfWidth);
       var y = (canvas.height - 100);
       paddle = new Paddle(x, y, slotWidth, slotHeight);
 
@@ -375,7 +374,7 @@ var breakout = (function () {
       playerIndexDigit.value = (activePlayer + 1);
 
       // build the digit indicating the current ball index.
-      var x = (canvas.width / 2);
+      var x = canvasHalfWidth;
       playerBallIndexDigit = new Digit(x, y, slotWidth, digitHeight);
       playerBallIndexDigit.value = playerBallIndex[activePlayer];
 
@@ -391,7 +390,7 @@ var breakout = (function () {
       playerScoreDigits[0].push(new Digit(x, y, slotWidth, digitHeight));
 
       // build the digits used to show the score for the second player.
-      x = (canvas.width / 2);
+      x = canvasHalfWidth
       playerScoreDigits[1].push(new Digit(x, y, slotWidth, digitHeight));
       x += slotWidth + slotSpacing;
       playerScoreDigits[1].push(new Digit(x, y, slotWidth, digitHeight));
