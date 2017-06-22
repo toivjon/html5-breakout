@@ -85,6 +85,8 @@ var breakout = (function () {
     var WALL_THICKNESS_DIVISOR = 30;
     /** The divisor of the ball thickness related to canvas width. */
     var BALL_THICKNESS_DIVISOR = 30;
+    /** The divisor of the paddle width related to canvas width. */
+    var PADDLE_WIDTH_DIVISOR = 10;
 
     // ========================================================================
     /**
@@ -159,10 +161,24 @@ var breakout = (function () {
       Collideable.call(this, x, y, width, height);
     }
 
+    // ========================================================================
+    /**
+     * A constructor for the paddle within the court scene.
+     * @param {*} x The x-position of the paddle.
+     * @param {*} y The y-position of the paddle.
+     * @param {*} width The width of the paddle.
+     * @param {*} height The height of the paddle.
+     */
+    function Paddle(x, y, width, height) {
+      Collideable.call(this, x, y, width, height);
+      this.fillStyle = "cyan";
+    }
+
     var leftWall;
     var rightWall;
     var topWall;
     var ball;
+    var paddle;
 
     /** A function that is called when the game enters this scene. */
     function enter() {
@@ -182,6 +198,12 @@ var breakout = (function () {
       var x = ((canvas.width / 2) - (ballThickness / 2));
       var y = ((canvas.height / 2) - (ballThickness / 2));
       ball = new Ball(x, y, ballThickness, ballThickness);
+
+      // build the paddle for the player.
+      var paddleWidth = (canvas.width / PADDLE_WIDTH_DIVISOR);
+      var x = (canvas.width / 2) - (paddleWidth / 2);
+      var y = (canvas.height - 100);
+      paddle = new Paddle(x, y, paddleWidth, ballThickness);
     }
 
     /** A function that is called when the game exists this scene. */
@@ -200,6 +222,7 @@ var breakout = (function () {
       rightWall.draw();
       topWall.draw();
       ball.draw();
+      paddle.draw();
     }
 
     return {
