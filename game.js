@@ -215,8 +215,8 @@ var breakout = (function () {
       var vlines = [];
       vlines[VLINE_LEFT_TOP] = [x, y, thickness, Math.ceil(height / 2)];
       vlines[VLINE_LEFT_BOTTOM] = [x, y + height / 2, thickness, height / 2];
-      vlines[VLINE_RIGHT_TOP] = [x + width - thickness, y, thickness, Math.ceil(height / 2)];
-      vlines[VLINE_RIGHT_BOTTOM] = [x + width - thickness, y + height / 2, thickness, height / 2];
+      vlines[VLINE_RIGHT_TOP] = [Math.ceil(x + width - thickness), y, thickness, Math.ceil(height / 2)];
+      vlines[VLINE_RIGHT_BOTTOM] = [Math.ceil(x + width - thickness), y + height / 2, thickness, height / 2];
       vlines[VLINE_CENTER] = [x + width / 2 - thickness, y, thickness, height];
 
       /**
@@ -228,79 +228,81 @@ var breakout = (function () {
       }
 
       this.draw = function () {
-        ctx.fillStyle = "white";
-        switch (this.value) {
-          case 0:
-            drawLine(hlines[HLINE_TOP]);
-            drawLine(hlines[HLINE_BOTTOM]);
-            drawLine(vlines[VLINE_LEFT_TOP]);
-            drawLine(vlines[VLINE_LEFT_BOTTOM]);
-            drawLine(vlines[VLINE_RIGHT_TOP]);
-            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
-            break;
-          case 1:
-            drawLine(vlines[VLINE_RIGHT_TOP]);
-            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
-            break;
-          case 2:
-            drawLine(hlines[HLINE_TOP]);
-            drawLine(hlines[HLINE_MIDDLE]);
-            drawLine(hlines[HLINE_BOTTOM]);
-            drawLine(vlines[VLINE_LEFT_BOTTOM]);
-            drawLine(vlines[VLINE_RIGHT_TOP]);
-            break;
-          case 3:
-            drawLine(hlines[HLINE_TOP]);
-            drawLine(hlines[HLINE_MIDDLE]);
-            drawLine(hlines[HLINE_BOTTOM]);
-            drawLine(vlines[VLINE_RIGHT_TOP]);
-            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
-            break;
-          case 4:
-            drawLine(hlines[HLINE_MIDDLE]);
-            drawLine(vlines[VLINE_LEFT_TOP]);
-            drawLine(vlines[VLINE_RIGHT_TOP]);
-            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
-            break;
-          case 5:
-            drawLine(hlines[HLINE_TOP]);
-            drawLine(hlines[HLINE_MIDDLE]);
-            drawLine(hlines[HLINE_BOTTOM]);
-            drawLine(vlines[VLINE_LEFT_TOP]);
-            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
-            break;
-          case 6:
-            drawLine(hlines[HLINE_TOP]);
-            drawLine(hlines[HLINE_MIDDLE]);
-            drawLine(hlines[HLINE_BOTTOM]);
-            drawLine(vlines[VLINE_LEFT_TOP]);
-            drawLine(vlines[VLINE_LEFT_BOTTOM]);
-            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
-            break;
-          case 7:
-            drawLine(hlines[HLINE_TOP]);
-            drawLine(vlines[VLINE_RIGHT_TOP]);
-            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
-            break;
-          case 8:
-            drawLine(hlines[HLINE_TOP]);
-            drawLine(hlines[HLINE_MIDDLE]);
-            drawLine(hlines[HLINE_BOTTOM]);
-            drawLine(vlines[VLINE_LEFT_TOP]);
-            drawLine(vlines[VLINE_LEFT_BOTTOM]);
-            drawLine(vlines[VLINE_RIGHT_TOP]);
-            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
-            break;
-          case 9:
-            drawLine(hlines[HLINE_TOP]);
-            drawLine(hlines[HLINE_MIDDLE]);
-            drawLine(hlines[HLINE_BOTTOM]);
-            drawLine(vlines[VLINE_LEFT_TOP]);
-            drawLine(vlines[VLINE_RIGHT_TOP]);
-            drawLine(vlines[VLINE_RIGHT_BOTTOM]);
-            break;
-          default:
-            break;
+        if (this.visible) {
+          ctx.fillStyle = "white";
+          switch (this.value) {
+            case 0:
+              drawLine(hlines[HLINE_TOP]);
+              drawLine(hlines[HLINE_BOTTOM]);
+              drawLine(vlines[VLINE_LEFT_TOP]);
+              drawLine(vlines[VLINE_LEFT_BOTTOM]);
+              drawLine(vlines[VLINE_RIGHT_TOP]);
+              drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+              break;
+            case 1:
+              drawLine(vlines[VLINE_RIGHT_TOP]);
+              drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+              break;
+            case 2:
+              drawLine(hlines[HLINE_TOP]);
+              drawLine(hlines[HLINE_MIDDLE]);
+              drawLine(hlines[HLINE_BOTTOM]);
+              drawLine(vlines[VLINE_LEFT_BOTTOM]);
+              drawLine(vlines[VLINE_RIGHT_TOP]);
+              break;
+            case 3:
+              drawLine(hlines[HLINE_TOP]);
+              drawLine(hlines[HLINE_MIDDLE]);
+              drawLine(hlines[HLINE_BOTTOM]);
+              drawLine(vlines[VLINE_RIGHT_TOP]);
+              drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+              break;
+            case 4:
+              drawLine(hlines[HLINE_MIDDLE]);
+              drawLine(vlines[VLINE_LEFT_TOP]);
+              drawLine(vlines[VLINE_RIGHT_TOP]);
+              drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+              break;
+            case 5:
+              drawLine(hlines[HLINE_TOP]);
+              drawLine(hlines[HLINE_MIDDLE]);
+              drawLine(hlines[HLINE_BOTTOM]);
+              drawLine(vlines[VLINE_LEFT_TOP]);
+              drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+              break;
+            case 6:
+              drawLine(hlines[HLINE_TOP]);
+              drawLine(hlines[HLINE_MIDDLE]);
+              drawLine(hlines[HLINE_BOTTOM]);
+              drawLine(vlines[VLINE_LEFT_TOP]);
+              drawLine(vlines[VLINE_LEFT_BOTTOM]);
+              drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+              break;
+            case 7:
+              drawLine(hlines[HLINE_TOP]);
+              drawLine(vlines[VLINE_RIGHT_TOP]);
+              drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+              break;
+            case 8:
+              drawLine(hlines[HLINE_TOP]);
+              drawLine(hlines[HLINE_MIDDLE]);
+              drawLine(hlines[HLINE_BOTTOM]);
+              drawLine(vlines[VLINE_LEFT_TOP]);
+              drawLine(vlines[VLINE_LEFT_BOTTOM]);
+              drawLine(vlines[VLINE_RIGHT_TOP]);
+              drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+              break;
+            case 9:
+              drawLine(hlines[HLINE_TOP]);
+              drawLine(hlines[HLINE_MIDDLE]);
+              drawLine(hlines[HLINE_BOTTOM]);
+              drawLine(vlines[VLINE_LEFT_TOP]);
+              drawLine(vlines[VLINE_RIGHT_TOP]);
+              drawLine(vlines[VLINE_RIGHT_BOTTOM]);
+              break;
+            default:
+              break;
+          }
         }
       }
     }
@@ -312,6 +314,7 @@ var breakout = (function () {
     var paddle;
     var playerIndexDigit;
     var playerBallIndexDigit;
+    var playerScoreDigits = [[], []];
 
     /** The currently active player as a zero based index (0|1). */
     var activePlayer = 0;
@@ -351,15 +354,39 @@ var breakout = (function () {
 
       // build the digit indicating the current player.
       var x = slotHeight;
-      var y = 80;
+      var y = slotHeight;
       playerIndexDigit = new Digit(x, y, slotWidth, digitHeight);
       playerIndexDigit.value = (activePlayer + 1);
 
       // build the digit indicating the current ball index.
       var x = (canvas.width / 2);
-      var y = 80;
       playerBallIndexDigit = new Digit(x, y, slotWidth, digitHeight);
       playerBallIndexDigit.value = playerBallIndex[activePlayer];
+
+      // build the digits used to show the score for the first player.
+      x = slotHeight;
+      y += digitHeight + 10;
+      playerScoreDigits[0].push(new Digit(x, y, slotWidth, digitHeight));
+      x += slotWidth + 10;
+      playerScoreDigits[0].push(new Digit(x, y, slotWidth, digitHeight));
+      x += slotWidth + 10;
+      playerScoreDigits[0].push(new Digit(x, y, slotWidth, digitHeight));
+      x += slotWidth + 10;
+      playerScoreDigits[0].push(new Digit(x, y, slotWidth, digitHeight));
+
+      // build the digits used to show the score for the second player.
+      x = (canvas.width / 2);
+      playerScoreDigits[1].push(new Digit(x, y, slotWidth, digitHeight));
+      x += slotWidth + 10;
+      playerScoreDigits[1].push(new Digit(x, y, slotWidth, digitHeight));
+      x += slotWidth + 10;
+      playerScoreDigits[1].push(new Digit(x, y, slotWidth, digitHeight));
+      x += slotWidth + 10;
+      playerScoreDigits[1].push(new Digit(x, y, slotWidth, digitHeight));
+
+      // hide hidden score indicators (fourth numbers).
+      playerScoreDigits[0][0].visible = false;
+      playerScoreDigits[1][0].visible = false;
 
       // initialize bricks for the first player.
       // TODO playerbricks[0][0].push();
@@ -391,6 +418,16 @@ var breakout = (function () {
       paddle.draw();
       playerIndexDigit.draw();
       playerBallIndexDigit.draw();
+
+      playerScoreDigits[0][0].draw();
+      playerScoreDigits[0][1].draw();
+      playerScoreDigits[0][2].draw();
+      playerScoreDigits[0][3].draw();
+
+      playerScoreDigits[1][0].draw();
+      playerScoreDigits[1][1].draw();
+      playerScoreDigits[1][2].draw();
+      playerScoreDigits[1][3].draw();
     }
 
     return {
