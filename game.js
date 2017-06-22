@@ -81,44 +81,70 @@ var breakout = (function () {
 
   var courtScene = (function () {
 
-    /** The divisor size of the vertical wall width related to canvas width. */
-    var VERTICAL_WALL_WIDTH_DIVISOR = 30;
-
-    var leftWall;
-    var rightWall;
-    var topWall;
+    /** The divisor of the static wall thickness related to canvas width. */
+    var WALL_THICKNESS_DIVISOR = 30;
 
     // ========================================================================
     /**
-     * A visible and collideable static wall entity.
+     * A constructor for all entities within the court scene.
+     * @param {*} x The x-position of the entity.
+     * @param {*} y The y-position of the entity.
+     * @param {*} width The width of the entity.
+     * @param {*} height The height of the entity.
+     */
+    function Entity(x, y, width, height) {
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+    }
+
+    // ========================================================================
+    /**
+     * A constructor for all collideable entities within the court scene.
+     * @param {*} x The x-position of the collideable entity.
+     * @param {*} y The y-position of the collideable entity.
+     * @param {*} width The width of the collideable entity.
+     * @param {*} height The height of the collideable entity.
+     */
+    function Collideable(x, y, width, height) {
+      Entity.call(this, x, y, width, height);
+      this.extent = [width / 2, height / 2];
+      this.center = [x + this.extent[0], y + this.extent[1]];
+    }
+
+    // ========================================================================
+    /**
+     * A constructor for all wall entities within the court scene.
      * @param {*} x The x-position of the wall.
      * @param {*} y The y-position of the wall.
      * @param {*} width The width of the wall.
      * @param {*} height The height of the wall.
      */
-    var wall = (function (x, y, width, height) {
-
-      function draw() {
+    function Wall(x, y, width, height) {
+      Collideable.call(this, x, y, width, height);
+      this.draw = function () {
         ctx.fillRect(x, y, width, height);
       }
+    }
 
-      return {
-        draw: draw
-      }
-    });
+    var leftWall;
+    var rightWall;
+    var topWall;
+    var brick;
 
     /** A function that is called when the game enters this scene. */
     function enter() {
       // build the vertical wall at the left side of the court.
-      var wallThickness = (canvas.width / VERTICAL_WALL_WIDTH_DIVISOR);
-      leftWall = wall(0, 0, wallThickness, canvas.height);
+      var wallThickness = (canvas.width / WALL_THICKNESS_DIVISOR);
+      leftWall = new Wall(0, 0, wallThickness, canvas.height);
 
       // build the vertical wall at the right side of the court.
       var x = (canvas.width - wallThickness);
-      rightWall = wall(x, 0, wallThickness, canvas.height);
+      rightWall = new Wall(x, 0, wallThickness, canvas.height);
 
       // builkd the top wall at the top of the court.
-      topWall = wall(0, 0, canvas.width, wallThickness);
+      topWall = new Wall(0, 0, canvas.width, wallThickness);
     }
 
     /** A function that is called when the game exists this scene. */
