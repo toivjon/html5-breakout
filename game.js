@@ -10,6 +10,15 @@ var breakout = (function () {
   var scene;
   var players;
 
+  // ==========================================================================
+
+  /**
+   * The welcoming scene for the Breakout game.
+   *
+   * This scene is the main scene which will be shown to users when they open
+   * the page. Our implementation contains a simple view where users see the
+   * name of the game and an instructions about how to start the game.
+   */
   var welcomeScene = (function () {
 
     /** A function that is called when the game enters this scene. */
@@ -20,6 +29,18 @@ var breakout = (function () {
     /** A function that is called when the game exists this scene. */
     function exit() {
       document.removeEventListener("keyup", onKeyUp);
+    }
+
+    /** A function that is called on each main loop iteration. */
+    function update() {
+      // ... no implementation required
+    }
+
+    /** A funcion that is called on each rendering frame iteration. */
+    function draw() {
+      // draw the application name string.
+      ctx.font = "32pt Arial";
+      ctx.fillText("HTML5 PONG", 0, 100);
     }
 
     /**
@@ -41,10 +62,14 @@ var breakout = (function () {
 
     return {
       enter: enter,
-      exit: exit
+      exit: exit,
+      update: update,
+      draw: draw
     }
 
   })();
+
+  // ==========================================================================
 
   var courtScene = (function () {
 
@@ -58,9 +83,21 @@ var breakout = (function () {
       // TODO
     }
 
+    /** A function that is called on each main loop iteration. */
+    function update() {
+      // TODO
+    }
+
+    /** A funcion that is called on each rendering frame iteration. */
+    function draw() {
+      // TODO
+    }
+
     return {
       enter: enter,
-      exit: exit
+      exit: exit,
+      update: update,
+      draw: draw
     }
 
   })();
