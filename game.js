@@ -1,15 +1,59 @@
 var breakout = (function () {
 
+  /** A constant for the number one keycode. */
+  var KEY_1 = 49;
+  /** A constant for the number two keycode. */
+  var KEY_2 = 50;
+
   var canvas;
   var ctx;
   var scene;
+  var players;
 
   var welcomeScene = (function () {
 
+    /** A function that is called when the game enters this scene. */
+    function enter() {
+      document.addEventListener("keyup", onKeyUp);
+    }
+
+    /** A function that is called when the game exists this scene. */
+    function exit() {
+      document.removeEventListener("keyup", onKeyUp);
+    }
+
+    /**
+     * A key listener to detect when a user key press is released.
+     *
+     * This implementation will detect only number 1 and 2 presses, which will
+     * first save the definition about the number of players and the trigger a
+     * new state transition from the welcome scene to the court scene.
+     *
+     * @param {*} event A key release event from the browser.
+     */
+    function onKeyUp(event) {
+      var key = event.keyCode ? event.keyCode : event.which;
+      if (key == KEY_1 || key == KEY_2) {
+        players = (key == KEY_1 ? 1 : 2);
+        setScene(courtScene);
+      }
+    }
+
+    return {
+      enter: enter,
+      exit: exit
+    }
+
+  })();
+
+  var courtScene = (function () {
+
+    /** A function that is called when the game enters this scene. */
     function enter() {
       // TODO
     }
 
+    /** A function that is called when the game exists this scene. */
     function exit() {
       // TODO
     }
@@ -17,17 +61,6 @@ var breakout = (function () {
     return {
       enter: enter,
       exit: exit
-    }
-  })();
-
-  var courtScene = (function () {
-
-    function enter() {
-      // TODO
-    }
-
-    function exit() {
-      // TODO
     }
 
   })();
