@@ -40,7 +40,7 @@ var breakout = (function () {
     function draw() {
       // draw the application name string.
       ctx.font = "32pt Arial";
-      ctx.fillText("HTML5 BREAKOUT", canvas.width/2, 100);
+      ctx.fillText("HTML5 BREAKOUT", canvas.width / 2, 100);
     }
 
     /**
@@ -160,6 +160,9 @@ var breakout = (function () {
    */
   function run() {
     // TODO ...
+
+    // swipe old contents from the draw buffer and draw the scene.
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     scene.draw();
   }
 
