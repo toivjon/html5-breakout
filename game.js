@@ -40,7 +40,7 @@ var breakout = (function () {
     function draw() {
       // draw the application name string.
       ctx.font = "32pt Arial";
-      ctx.fillText("HTML5 PONG", 0, 100);
+      ctx.fillText("HTML5 BREAKOUT", canvas.width/2, 100);
     }
 
     /**
@@ -143,8 +143,9 @@ var breakout = (function () {
       throw Error("Unable to get 2D draw context from the canvas.");
     }
 
-    // set initial drawing fill color to white.
+    // specify global draw definitions.
     ctx.fillStyle = "white";
+    ctx.textAlign = "center";
 
     // set the welcome scene as the initial scene.
     setScene(welcomeScene);
@@ -159,6 +160,7 @@ var breakout = (function () {
    */
   function run() {
     // TODO ...
+    scene.draw();
   }
 
   /**
