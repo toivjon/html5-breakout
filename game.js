@@ -131,7 +131,6 @@ var breakout = (function () {
     var leftWall;
     var rightWall;
     var topWall;
-    var brick;
 
     /** A function that is called when the game enters this scene. */
     function enter() {
