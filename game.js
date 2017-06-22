@@ -83,6 +83,8 @@ var breakout = (function () {
 
     /** The divisor of the static wall thickness related to canvas width. */
     var WALL_THICKNESS_DIVISOR = 30;
+    /** The divisor of the ball thickness related to canvas width. */
+    var BALL_THICKNESS_DIVISOR = 30;
 
     // ========================================================================
     /**
@@ -128,9 +130,28 @@ var breakout = (function () {
       }
     }
 
+    // ========================================================================
+    /**
+     * A constructor for the ball within the court scene.
+     * @param {*} x The x-position of the ball.
+     * @param {*} y The y-position of the ball.
+     * @param {*} width The width of the ball.
+     * @param {*} height The height of the ball.
+     */
+    function Ball(x, y, width, height) {
+      Collideable.call(this, x, y, width, height);
+      this.visible = true;
+      this.draw = function () {
+        if (this.visible) {
+          ctx.fillRect(x, y, width, height);
+        }
+      }
+    }
+
     var leftWall;
     var rightWall;
     var topWall;
+    var ball;
 
     /** A function that is called when the game enters this scene. */
     function enter() {
@@ -142,8 +163,14 @@ var breakout = (function () {
       var x = (canvas.width - wallThickness);
       rightWall = new Wall(x, 0, wallThickness, canvas.height);
 
-      // builkd the top wall at the top of the court.
+      // build the top wall at the top of the court.
       topWall = new Wall(0, 0, canvas.width, wallThickness);
+
+      // build the ball of the court.
+      var ballThickness = (canvas.width / BALL_THICKNESS_DIVISOR);
+      var x = ((canvas.width / 2) - (ballThickness / 2));
+      var y = ((canvas.height / 2) - (ballThickness / 2));
+      ball = new Ball(x, y, ballThickness, ballThickness);
     }
 
     /** A function that is called when the game exists this scene. */
@@ -161,6 +188,7 @@ var breakout = (function () {
       leftWall.draw();
       rightWall.draw();
       topWall.draw();
+      ball.draw();
     }
 
     return {
