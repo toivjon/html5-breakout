@@ -307,6 +307,14 @@ var breakout = (function () {
       }
     }
 
+    // ========================================================================
+    /**
+     * A constructor for an individual brick within the court scene.
+     * @param {*} x The x-position of the brick.
+     * @param {*} y The y-position of the brick.
+     * @param {*} width The width of the brick.
+     * @param {*} height The height of the brick.
+     */
     function Brick(x, y, width, height, fillStyle) {
       Collideable.call(this, x, y, width, height);
       this.fillStyle = fillStyle;
