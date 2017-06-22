@@ -82,8 +82,8 @@ var breakout = (function () {
   var courtScene = (function () {
 
     /** The divisor of the slot width related to canvas width. */
-    var SLOT_WIDTH_DIVISOR = 15;
-    /** The divisor of the slot height releated to canvas width. */
+    var SLOT_WIDTH_DIVISOR = 16;
+    /** The divisor of the slot height related to canvas width. */
     var SLOT_HEIGHT_DIVISOR = 45;
 
     // ========================================================================
@@ -307,6 +307,11 @@ var breakout = (function () {
       }
     }
 
+    function Brick(x, y, width, height, fillStyle) {
+      Collideable.call(this, x, y, width, height);
+      this.fillStyle = fillStyle;
+    }
+
     var leftWall;
     var rightWall;
     var topWall;
@@ -315,6 +320,7 @@ var breakout = (function () {
     var playerIndexDigit;
     var playerBallIndexDigit;
     var playerScoreDigits = [[], []];
+    var playerBricks = [[[], []], [[], []]];
 
     /** The currently active player as a zero based index (0|1). */
     var activePlayer = 0;
@@ -322,8 +328,6 @@ var breakout = (function () {
     var playerLevel = [0, 0];
     /** A definition of the current ball index for both players. */
     var playerBallIndex = [1, 1];
-    /** The bricks for the particular level (0-based) for both players. */
-    var playerBricks = [[], []];
 
     /** A function that is called when the game enters this scene. */
     function enter() {
@@ -331,6 +335,10 @@ var breakout = (function () {
       var slotWidth = (canvas.width / SLOT_WIDTH_DIVISOR);
       var slotHeight = (canvas.width / SLOT_HEIGHT_DIVISOR);
       var digitHeight = (slotHeight * 5);
+
+      // calculate the amount of spacing we can reserve between the slots.
+      // NOTE: spacing is based on the free space after 2 walls and 14 bricks.
+      var slotSpacing = (canvas.width - (2 * slotHeight) - (14 * slotWidth)) / 13;
 
       // build the vertical wall at the left side of the court.
       leftWall = new Wall(0, 0, slotHeight, canvas.height);
@@ -365,37 +373,56 @@ var breakout = (function () {
 
       // build the digits used to show the score for the first player.
       x = slotHeight;
-      y += digitHeight + 10;
+      y += digitHeight + slotSpacing;
       playerScoreDigits[0].push(new Digit(x, y, slotWidth, digitHeight));
-      x += slotWidth + 10;
+      x += slotWidth + slotSpacing;
       playerScoreDigits[0].push(new Digit(x, y, slotWidth, digitHeight));
-      x += slotWidth + 10;
+      x += slotWidth + slotSpacing;
       playerScoreDigits[0].push(new Digit(x, y, slotWidth, digitHeight));
-      x += slotWidth + 10;
+      x += slotWidth + slotSpacing;
       playerScoreDigits[0].push(new Digit(x, y, slotWidth, digitHeight));
 
       // build the digits used to show the score for the second player.
       x = (canvas.width / 2);
       playerScoreDigits[1].push(new Digit(x, y, slotWidth, digitHeight));
-      x += slotWidth + 10;
+      x += slotWidth + slotSpacing;
       playerScoreDigits[1].push(new Digit(x, y, slotWidth, digitHeight));
-      x += slotWidth + 10;
+      x += slotWidth + slotSpacing;
       playerScoreDigits[1].push(new Digit(x, y, slotWidth, digitHeight));
-      x += slotWidth + 10;
+      x += slotWidth + slotSpacing;
       playerScoreDigits[1].push(new Digit(x, y, slotWidth, digitHeight));
 
       // hide hidden score indicators (fourth numbers).
       playerScoreDigits[0][0].visible = false;
       playerScoreDigits[1][0].visible = false;
 
-      // initialize bricks for the first player.
-      // TODO playerbricks[0][0].push();
-      // TODO playerbricks[0][1].push();
+      // initialize bricks for both players.
+      y += digitHeight + slotSpacing;
+      for (var i = 0; i < 8; i++) {
+        // resolve the color to be used for this row.
+        var fillStyle;
+        if (i < 2) {
+          fillStyle = "red";
+        } else if (i < 4) {
+          fillStyle = "orange";
+        } else if (i < 6) {
+          fillStyle = "green";
+        } else if (i < 8) {
+          fillStyle = "yellow";
+        }
 
-      // initialize bricks for the second player.
-      if (players == 2) {
-        // TODO playerbricks[1][0].push();
-        // TODO playerbricks[1][1].push();
+        // start placing from the left wall.
+        x = slotHeight;
+
+        // create all bricks for both players and for all levels.
+        for (var j = 0; j < 14; j++) {
+          playerBricks[0][0].push(new Brick(x, y, slotWidth, slotHeight, fillStyle));
+          playerBricks[0][1].push(new Brick(x, y, slotWidth, slotHeight, fillStyle));
+          playerBricks[1][0].push(new Brick(x, y, slotWidth, slotHeight, fillStyle));
+          playerBricks[1][1].push(new Brick(x, y, slotWidth, slotHeight, fillStyle));
+          x += slotWidth + slotSpacing;
+        }
+        y += slotHeight + slotSpacing;
       }
     }
 
@@ -411,13 +438,16 @@ var breakout = (function () {
 
     /** A funcion that is called on each rendering frame iteration. */
     function draw() {
-      leftWall.draw();
-      rightWall.draw();
       topWall.draw();
       ball.draw();
       paddle.draw();
       playerIndexDigit.draw();
       playerBallIndexDigit.draw();
+
+      // draw the currently act
+      for (var i = 0; i < 112; i++) {
+        playerBricks[activePlayer][playerLevel[activePlayer]][i].draw();
+      }
 
       playerScoreDigits[0][0].draw();
       playerScoreDigits[0][1].draw();
@@ -428,6 +458,9 @@ var breakout = (function () {
       playerScoreDigits[1][1].draw();
       playerScoreDigits[1][2].draw();
       playerScoreDigits[1][3].draw();
+
+      leftWall.draw();
+      rightWall.draw();
     }
 
     return {
