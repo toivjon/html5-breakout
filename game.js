@@ -1,5 +1,8 @@
 var breakout = (function () {
 
+  var canvas;
+  var ctx;
+
   /**
    * Initialize the game.
    *
@@ -8,7 +11,20 @@ var breakout = (function () {
    * define a game wide initializations for scenes etc.
    */
   function init() {
-    // TODO ...
+    // get a referene to the target <canvas> element.
+    if (!(canvas = document.getElementById("game-canvas"))) {
+      throw Error("Unable to find the required canvas element.");
+    }
+
+    // get a reference to the 2D drawing context.
+    if (!(ctx = canvas.getContext("2d"))) {
+      throw Error("Unable to get 2D draw context from the canvas.");
+    }
+
+    // set initial drawing fill color to white.
+    ctx.fillStyle = "white";
+
+    // TODO set the initial scene ...
   }
 
   /**
