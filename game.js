@@ -202,7 +202,7 @@ var breakout = (function () {
      */
     function Ball(x, y, width, height) {
       /** The initial velocity for the ball.  */
-      var INITIAL_VELOCITY = 0.4;
+      var INITIAL_VELOCITY = 0.3;
 
       /**
        * A utility function to create an initial random direction for the ball.
