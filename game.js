@@ -279,7 +279,7 @@ var breakout = (function () {
     function Paddle(x, y, width, height) {
       Movable.call(this, x, y, width, height);
       this.fillStyle = "cyan";
-      this.velocity = 0.3;
+      this.velocity = 0.5;
       this.update = function (dt) {
         this.move(dt);
         if (this.direction[0] < 0.0 && this.collides(leftWall)) {
