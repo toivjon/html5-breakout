@@ -320,6 +320,19 @@ var breakout = (function () {
       this.fillStyle = fillStyle;
     }
 
+    // ========================================================================
+    /**
+     * A constructor for the out-of-bounds detector at the bottom of the court.
+     * @param {*} x The x-position of the detector.
+     * @param {*} y The y-position of the detector.
+     * @param {*} width The width of the detector.
+     * @param {*} height The height of the detector.
+     */
+    function OutOfBounds(x, y, width, height) {
+      Collideable.call(this, x, y, width, height);
+      this.visible = false;
+    }
+
     var leftWall;
     var rightWall;
     var topWall;
@@ -329,6 +342,7 @@ var breakout = (function () {
     var playerBallIndexDigit;
     var playerScoreDigits = [[], []];
     var playerBricks = [[[], []], [[], []]];
+    var outOfBoundsDetector;
 
     /** The currently active player as a zero based index (0|1). */
     var activePlayer = 0;
@@ -431,6 +445,10 @@ var breakout = (function () {
         }
         y += slotHeight + slotSpacing;
       }
+
+      // create the hidden out-of-bounds detector.
+      y = canvas.height;
+      outOfBoundsDetector = new OutOfBounds(0, y, canvas.width, 1000);
     }
 
     /** A function that is called when the game exists this scene. */
