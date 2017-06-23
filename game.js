@@ -136,6 +136,11 @@ var breakout = (function () {
       Drawable.call(this, x, y, width, height);
       this.extent = [width / 2, height / 2];
       this.center = [x + this.extent[0], y + this.extent[1]];
+      this.collides = function (o) {
+        var x = Math.abs(this.center[0] - o.center[0]) < (this.extent[0] + o.extent[0]);
+        var y = Math.abs(this.center[1] - o.center[1]) < (this.extent[1] + o.extent[1]);
+        return x && y;
+      }
     }
 
     // ========================================================================
@@ -150,7 +155,7 @@ var breakout = (function () {
       Collideable.call(this, x, y, width, height);
       this.direction = [0.0, 0.0];
       this.velocity = 0.0;
-      this.update = function (dt) {
+      this.move = function (dt) {
         if (this.direction[0] != 0.0) {
           var diffX = dt * this.direction[0] * this.velocity;
           this.x += diffX;
@@ -186,6 +191,20 @@ var breakout = (function () {
      */
     function Ball(x, y, width, height) {
       Movable.call(this, x, y, width, height);
+      this.velocity = 0.4;
+      this.direction = [-0.5, -0.5];
+      this.update = function (dt) {
+        if (this.direction[1] < 0.0 && this.collides(topWall)) {
+          this.direction[1] = -this.direction[1];
+        }
+        if (this.direction[0] < 0.0 && this.collides(leftWall)) {
+          this.direction[0] = -this.direction[0];
+        }
+        if (this.direction[0] > 0.0 && this.collides(rightWall)) {
+          this.direction[0] = -this.direction[0];
+        }
+        this.move(dt);
+      }
     }
 
     // ========================================================================
@@ -199,6 +218,9 @@ var breakout = (function () {
     function Paddle(x, y, width, height) {
       Movable.call(this, x, y, width, height);
       this.fillStyle = "cyan";
+      this.update = function (dt) {
+        this.move(dt);
+      }
     }
 
     // ========================================================================
