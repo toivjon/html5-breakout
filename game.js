@@ -89,6 +89,17 @@ var breakout = (function () {
     /** The divisor of the slot height related to canvas width. */
     var SLOT_HEIGHT_DIVISOR = 45;
 
+    /**
+     * Get a normalized version of the given 2d-vector.
+     *
+     * @param {[]} vector An 2d-vector to be normalized.
+     * @returns {[]} A normalized version of the given vector.
+     */
+    function normalize(vector) {
+      var length = Math.sqrt(Math.pow(vector[0], 2) + Math.pow(vector[1], 2));
+      return [vector[0] / length, vector[1] / length];
+    }
+
     // ========================================================================
     /**
      * A constructor for all entities within the court scene.
@@ -190,9 +201,28 @@ var breakout = (function () {
      * @param {*} height The height of the ball.
      */
     function Ball(x, y, width, height) {
+      /** The initial velocity for the ball.  */
+      var INITIAL_VELOCITY = 0.4;
+
+      /**
+       * A utility function to create an initial random direction for the ball.
+       *
+       * @returns {[]} A new random 2d-direction vector.
+       */
+      function createRandomInitDirection() {
+        switch (Math.floor((Math.random() * 10) + 1) % 3) {
+          case 0:
+            return normalize([0.0, 1.0]);
+          case 1:
+            return normalize([0.5, 0.5]);
+          case 2:
+            return normalize([-0.5, 0.5]);
+        }
+      }
+
       Movable.call(this, x, y, width, height);
-      this.velocity = 0.4;
-      this.direction = [0.0, 0.5];
+      this.velocity = INITIAL_VELOCITY;
+      this.direction = createRandomInitDirection();
       this.update = function (dt) {
         if (this.direction[1] < 0.0 && this.collides(topWall)) {
           this.direction[1] = -this.direction[1];
@@ -207,6 +237,27 @@ var breakout = (function () {
           var xDiff = (this.center[0] - paddle.center[0]);
           this.direction[0] = xDiff / (paddle.width / 2);
           this.direction[1] = -this.direction[1];
+        }
+        if (this.direction[1] > 0.0 && this.collides(outOfBoundsDetector)) {
+          // reset the ball state and randomize a new direction.
+          this.x = (canvas.width / 2) - this.extent[0];
+          this.y = (canvas.height / 2) - this.extent[1];
+          this.center[0] = (canvas.width / 2);
+          this.center[1] = (canvas.height / 2);
+          this.velocity = INITIAL_VELOCITY;
+          this.direction = createRandomInitDirection();
+
+          if (players == 2) {
+            // TODO handle two player game logics separately.
+          } else {
+            if (playerBallIndex[activePlayer] == 3) {
+              // TODO ... end the game ...
+            } else {
+              playerBallIndex[activePlayer]++;
+              playerBallIndexDigit.value = playerBallIndex[activePlayer];
+            }
+          }
+          // TODO add a timeout before the ball launches again.
         }
         this.move(dt);
       }
@@ -503,7 +554,7 @@ var breakout = (function () {
       }
 
       // create the hidden out-of-bounds detector.
-      outOfBoundsDetector = new OutOfBounds(0, canvas.height, canvas.width, 1000);
+      outOfBoundsDetector = new OutOfBounds(0, canvas.height + slotHeight, canvas.width, 1000);
     }
 
     /** A function that is called when the game exists this scene. */
