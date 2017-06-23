@@ -192,7 +192,7 @@ var breakout = (function () {
     function Ball(x, y, width, height) {
       Movable.call(this, x, y, width, height);
       this.velocity = 0.4;
-      this.direction = [-0.5, -0.5];
+      this.direction = [0.0, 0.5];
       this.update = function (dt) {
         if (this.direction[1] < 0.0 && this.collides(topWall)) {
           this.direction[1] = -this.direction[1];
@@ -202,6 +202,11 @@ var breakout = (function () {
         }
         if (this.direction[0] > 0.0 && this.collides(rightWall)) {
           this.direction[0] = -this.direction[0];
+        }
+        if (this.direction[1] > 0.0 && this.collides(paddle)) {
+          var xDiff = (this.center[0] - paddle.center[0]);
+          this.direction[0] = xDiff / (paddle.width / 2);
+          this.direction[1] = -this.direction[1];
         }
         this.move(dt);
       }
