@@ -447,8 +447,7 @@ var breakout = (function () {
       }
 
       // create the hidden out-of-bounds detector.
-      y = canvas.height;
-      outOfBoundsDetector = new OutOfBounds(0, y, canvas.width, 1000);
+      outOfBoundsDetector = new OutOfBounds(0, canvas.height, canvas.width, 1000);
     }
 
     /** A function that is called when the game exists this scene. */
