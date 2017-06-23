@@ -4,10 +4,10 @@ var breakout = (function () {
   var KEY_1 = 49;
   /** A constant for the number two keycode. */
   var KEY_2 = 50;
-  /** A constant for the up-arrow keycode. */
-  var KEY_UP = 38;
-  /** A constant for the down-arrow keycode. */
-  var KEY_DOWN = 40;
+  /** A constant for the right-arrow keycode. */
+  var KEY_RIGHT = 39;
+  /** A constant for the left-arrow keycode. */
+  var KEY_LEFT = 37;
 
   var canvas;
   var ctx;
@@ -585,12 +585,12 @@ var breakout = (function () {
     function onKeyUp(event) {
       var key = event.keyCode ? event.keyCode : event.which;
       switch (key) {
-        case KEY_UP:
+        case KEY_LEFT:
           if (paddle.direction[0] == -1.0) {
             paddle.direction = [0.0, 0.0];
           }
           break;
-        case KEY_DOWN:
+        case KEY_RIGHT:
           if (paddle.direction[0] == 1.0) {
             paddle.direction = [0.0, 0.0];
           }
@@ -602,10 +602,10 @@ var breakout = (function () {
     function onKeyDown(event) {
       var key = event.keyCode ? event.keyCode : event.which;
       switch (key) {
-        case KEY_UP:
+        case KEY_LEFT:
           paddle.direction = [-1.0, 0.0];
           break;
-        case KEY_DOWN:
+        case KEY_RIGHT:
           paddle.direction = [1.0, 0.0]
           break;
       }
