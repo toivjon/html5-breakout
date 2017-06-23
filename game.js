@@ -148,8 +148,8 @@ var breakout = (function () {
      */
     function Movable(x, y, width, height) {
       Collideable.call(this, x, y, width, height);
-      this.direction = [1.0, 0.0];
-      this.velocity = 0.2;
+      this.direction = [0.0, 0.0];
+      this.velocity = 0.0;
       this.update = function (dt) {
         if (this.direction[0] != 0.0) {
           var diffX = dt * this.direction[0] * this.velocity;
