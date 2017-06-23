@@ -4,6 +4,10 @@ var breakout = (function () {
   var KEY_1 = 49;
   /** A constant for the number two keycode. */
   var KEY_2 = 50;
+  /** A constant for the up-arrow keycode. */
+  var KEY_UP = 38;
+  /** A constant for the down-arrow keycode. */
+  var KEY_DOWN = 40;
 
   var canvas;
   var ctx;
@@ -237,6 +241,7 @@ var breakout = (function () {
           var xDiff = (this.center[0] - paddle.center[0]);
           this.direction[0] = xDiff / (paddle.width / 2);
           this.direction[1] = -this.direction[1];
+          this.direction = normalize(this.direction);
         }
         if (this.direction[1] > 0.0 && this.collides(outOfBoundsDetector)) {
           // reset the ball state and randomize a new direction.
@@ -274,8 +279,17 @@ var breakout = (function () {
     function Paddle(x, y, width, height) {
       Movable.call(this, x, y, width, height);
       this.fillStyle = "cyan";
+      this.velocity = 0.3;
       this.update = function (dt) {
         this.move(dt);
+        if (this.direction[0] < 0.0 && this.collides(leftWall)) {
+          this.x = leftWall.x + leftWall.extent[0] * 2;
+          this.center[0] = this.x + this.extent[0];
+        }
+        if (this.direction[0] > 0.0 && this.collides(rightWall)) {
+          this.x = rightWall.x - this.extent[0] * 2;
+          this.center[0] = this.x + this.extent[0];
+        }
       }
     }
 
@@ -555,11 +569,46 @@ var breakout = (function () {
 
       // create the hidden out-of-bounds detector.
       outOfBoundsDetector = new OutOfBounds(0, canvas.height + slotHeight, canvas.width, 1000);
+
+      // attach a keyboard key press listeners.
+      document.addEventListener("keyup", onKeyUp);
+      document.addEventListener("keydown", onKeyDown);
     }
 
     /** A function that is called when the game exists this scene. */
     function exit() {
-      // TODO
+      document.removeEventListener("keyup", onKeyUp);
+      document.removeEventListener("keydown", onKeyDown);
+    }
+
+    /** A function that is called when a keyboard key is released. */
+    function onKeyUp(event) {
+      var key = event.keyCode ? event.keyCode : event.which;
+      switch (key) {
+        case KEY_UP:
+          if (paddle.direction[0] == -1.0) {
+            paddle.direction = [0.0, 0.0];
+          }
+          break;
+        case KEY_DOWN:
+          if (paddle.direction[0] == 1.0) {
+            paddle.direction = [0.0, 0.0];
+          }
+          break;
+      }
+    }
+
+    /** A function that is called when a keyboard key is pressed. */
+    function onKeyDown(event) {
+      var key = event.keyCode ? event.keyCode : event.which;
+      switch (key) {
+        case KEY_UP:
+          paddle.direction = [-1.0, 0.0];
+          break;
+        case KEY_DOWN:
+          paddle.direction = [1.0, 0.0]
+          break;
+      }
     }
 
     /** A function that is called on each main loop iteration. */
