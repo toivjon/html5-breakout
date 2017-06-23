@@ -9,6 +9,9 @@ var breakout = (function () {
   var ctx;
   var scene;
   var players;
+  var prevTickTime;
+  var deltaAccumulator = 0.0;
+  var FPS = (1000.0 / 60.0);
 
   // ==========================================================================
 
@@ -116,7 +119,7 @@ var breakout = (function () {
       this.draw = function () {
         if (this.visible == true) {
           ctx.fillStyle = this.fillStyle;
-          ctx.fillRect(x, y, width, height);
+          ctx.fillRect(this.x, this.y, width, height);
         }
       }
     }
@@ -133,6 +136,32 @@ var breakout = (function () {
       Drawable.call(this, x, y, width, height);
       this.extent = [width / 2, height / 2];
       this.center = [x + this.extent[0], y + this.extent[1]];
+    }
+
+    // ========================================================================
+    /**
+     * A constructor for all movable entities within the court scene.
+     * @param {*} x The x-position of the movable entity.
+     * @param {*} y The y-position of the movable entity.
+     * @param {*} width The width of the movable entity.
+     * @param {*} height The height of the movable entity.
+     */
+    function Movable(x, y, width, height) {
+      Collideable.call(this, x, y, width, height);
+      this.direction = [1.0, 0.0];
+      this.velocity = 0.2;
+      this.update = function (dt) {
+        if (this.direction[0] != 0.0) {
+          var diffX = dt * this.direction[0] * this.velocity;
+          this.x += diffX;
+          this.center[0] += diffX;
+        }
+        if (this.direction[1] != 0.0) {
+          var diffY = dt * this.direction[1] * this.velocity;
+          this.y += diffY;
+          this.center[1] += diffY;
+        }
+      }
     }
 
     // ========================================================================
@@ -156,7 +185,7 @@ var breakout = (function () {
      * @param {*} height The height of the ball.
      */
     function Ball(x, y, width, height) {
-      Collideable.call(this, x, y, width, height);
+      Movable.call(this, x, y, width, height);
     }
 
     // ========================================================================
@@ -168,7 +197,7 @@ var breakout = (function () {
      * @param {*} height The height of the paddle.
      */
     function Paddle(x, y, width, height) {
-      Collideable.call(this, x, y, width, height);
+      Movable.call(this, x, y, width, height);
       this.fillStyle = "cyan";
     }
 
@@ -456,8 +485,9 @@ var breakout = (function () {
     }
 
     /** A function that is called on each main loop iteration. */
-    function update() {
-      // TODO
+    function update(dt) {
+      paddle.update(dt);
+      ball.update(dt);
     }
 
     /** A funcion that is called on each rendering frame iteration. */
@@ -552,12 +582,23 @@ var breakout = (function () {
    * runs the game logic updates and draw operations until the user closes the
    * browser tab or the JavaScript catches an exception from the code.
    */
-  function run() {
-    // TODO calculate delta time and call scene update.
+  function run(tickTime) {
+    // calculate delta time and store current tick time.
+    var dt = (tickTime - prevTickTime);
+    prevTickTime = tickTime;
 
-    // swipe old contents from the draw buffer and draw the scene.
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    scene.draw();
+    // update and draw the scene only when we have reasonable delta.
+    if (dt < 100) {
+      deltaAccumulator += dt;
+      while (deltaAccumulator >= FPS) {
+        scene.update(FPS);
+        deltaAccumulator -= FPS;
+      }
+
+      // swipe old contents from the draw buffer and draw the scene.
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      scene.draw();
+    }
 
     // perform a main loop iteration.
     requestAnimationFrame(run);
