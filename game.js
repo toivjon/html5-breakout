@@ -92,6 +92,14 @@ var breakout = (function () {
     var SLOT_WIDTH_DIVISOR = 16;
     /** The divisor of the slot height related to canvas width. */
     var SLOT_HEIGHT_DIVISOR = 45;
+    /** The fill style for the first brick group closest to paddle. */
+    var BRICKS_1_FILL_STYLE = "yellow";
+    /** The fill style for the second brick group. */
+    var BRICKS_2_FILL_STYLE = "green";
+    /** The fill style for the third brick group. */
+    var BRICKS_3_FILL_STYLE = "orange";
+    /** The fill style for the fourth brick group. */
+    var BRICKS_4_FILL_STYLE = "red";
 
     /**
      * Get a normalized version of the given 2d-vector.
@@ -275,13 +283,13 @@ var breakout = (function () {
               bricks[i].enabled = false;
 
               // perform actions based on the color of the brick we just hit.
-              if (bricks[i].fillStyle == "yellow") {
+              if (bricks[i].fillStyle == BRICKS_1_FILL_STYLE) {
                 playerScores[activePlayer] += 1;
-              } else if (bricks[i].fillStyle == "green") {
+              } else if (bricks[i].fillStyle == BRICKS_2_FILL_STYLE) {
                 playerScores[activePlayer] += 3;
-              } else if (bricks[i].fillStyle == "orange") {
+              } else if (bricks[i].fillStyle == BRICKS_3_FILL_STYLE) {
                 playerScores[activePlayer] += 5;
-              } else if (bricks[i].fillStyle == "red") {
+              } else if (bricks[i].fillStyle == BRICKS_4_FILL_STYLE) {
                 playerScores[activePlayer] += 7;
               }
 
@@ -603,13 +611,13 @@ var breakout = (function () {
         // resolve the color to be used for this row.
         var fillStyle;
         if (i < 2) {
-          fillStyle = "red";
+          fillStyle = BRICKS_4_FILL_STYLE;
         } else if (i < 4) {
-          fillStyle = "orange";
+          fillStyle = BRICKS_3_FILL_STYLE;
         } else if (i < 6) {
-          fillStyle = "green";
+          fillStyle = BRICKS_2_FILL_STYLE;
         } else if (i < 8) {
-          fillStyle = "yellow";
+          fillStyle = BRICKS_1_FILL_STYLE;
         }
 
         // start placing from the left wall.
