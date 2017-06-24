@@ -151,7 +151,9 @@ var breakout = (function () {
       Drawable.call(this, x, y, width, height);
       this.extent = [width / 2, height / 2];
       this.center = [x + this.extent[0], y + this.extent[1]];
+      this.enabled = true;
       this.collides = function (o) {
+        if (this.enabled == false || o.enabled == false) return false;
         var x = Math.abs(this.center[0] - o.center[0]) < (this.extent[0] + o.extent[0]);
         var y = Math.abs(this.center[1] - o.center[1]) < (this.extent[1] + o.extent[1]);
         return x && y;
@@ -206,7 +208,7 @@ var breakout = (function () {
      */
     function Ball(x, y, width, height) {
       /** The initial velocity for the ball.  */
-      var INITIAL_VELOCITY = 0.3;
+      var INITIAL_VELOCITY = 0.4;
 
       /**
        * A utility function to create an initial random direction for the ball.
@@ -263,6 +265,20 @@ var breakout = (function () {
             }
           }
           // TODO add a timeout before the ball launches again.
+        } else {
+          // check whether the ball intersects with the court bricks.
+          var bricks = playerBricks[activePlayer][playerLevel[activePlayer]];
+          for (var i = 0; i < bricks.length; i++) {
+            if (this.collides(bricks[i])) {
+              // disable the brick from the level.
+              bricks[i].visible = false;
+              bricks[i].enabled = false;
+
+              // determine the reflection direction based on the collision side.
+              this.direction[1] = -this.direction[1];
+              break;
+            }
+          }
         }
         this.move(dt);
       }
