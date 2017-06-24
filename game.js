@@ -338,6 +338,9 @@ var breakout = (function () {
                   }
                 }
 
+                // start blinking the current player score digits.
+                blinkPlayerScoreDigits(activePlayer);
+
                 // refresh the currently active players score.
                 refreshPlayerScoreDigits(activePlayer);
 
@@ -383,6 +386,25 @@ var breakout = (function () {
         var value = parseInt(scoreString.charAt((scoreString.length - 1) - i));
         playerScoreDigits[playerIdx][3 - i].value = value;
       }
+    }
+
+    /**
+     * Start blinking of the target player score.
+     *
+     * This function starts a blinking functionality for the target player
+     * scores i.e. the four or three digits currently shown as a player score.
+     * Note that the fourth digit (i.e. the thousand digit) is only blinked
+     * when the player has enough points that the thousand should be shown.
+     *
+     * @param {*} playerIdx The index of the player score to be blinked.
+     */
+    function blinkPlayerScoreDigits(playerIdx) {
+      if (playerScores[activePlayer] > 999) {
+        playerScoreDigits[activePlayer][0].setBlink(true);
+      }
+      playerScoreDigits[activePlayer][1].setBlink(true);
+      playerScoreDigits[activePlayer][2].setBlink(true);
+      playerScoreDigits[activePlayer][3].setBlink(true);
     }
 
     // ========================================================================
@@ -471,6 +493,47 @@ var breakout = (function () {
       vlines[VLINE_RIGHT_TOP] = [Math.ceil(x + width - thickness), y, thickness, Math.ceil(height / 2)];
       vlines[VLINE_RIGHT_BOTTOM] = [Math.ceil(x + width - thickness), y + height / 2, thickness, height / 2];
       vlines[VLINE_CENTER] = [x + width / 2 - thickness, y, thickness, height];
+
+      /** The amount of times to blink when blink is activated. */
+      var BLINK_COUNT = 5;
+      /** The amount of ticks (updates) to wait between blinking. */
+      var BLINK_INTERVAL = 10;
+
+      this.blinksLeft = 0;
+      this.blinkTimer = 0;
+
+      this.update = function (dt) {
+        if (this.blinksLeft > 0) {
+          this.blinkTimer--;
+          if (this.visible == true) {
+            // number is currently shown, so check whether it is time to hide it.
+            if (this.blinkTimer <= 0) {
+              this.visible = false;
+              this.blinkTimer = BLINK_INTERVAL;
+            }
+          } else {
+            // number is currently hidden, so check whether it is time to show it.
+            if (this.blinkTimer <= 0) {
+              this.visible = true;
+              this.blinksLeft--;
+              if (this.blinksLeft > 0) {
+                this.blinkTimer = BLINK_INTERVAL;
+              }
+            }
+          }
+        }
+      }
+
+      this.setBlink = function (active) {
+        if (active == false) {
+          this.blinksLeft = 0;
+          this.blinkTimer = 0;
+          this.visible = true;
+        } else {
+          this.blinksLeft = BLINK_COUNT;
+          this.blinkTimer = 0;
+        }
+      }
 
       /**
        * Draw the given line instructions on the canvas.
@@ -749,6 +812,16 @@ var breakout = (function () {
     function update(dt) {
       paddle.update(dt);
       ball.update(dt);
+
+      playerScoreDigits[0][0].update(dt);
+      playerScoreDigits[0][1].update(dt);
+      playerScoreDigits[0][2].update(dt);
+      playerScoreDigits[0][3].update(dt);
+
+      playerScoreDigits[1][0].update(dt);
+      playerScoreDigits[1][1].update(dt);
+      playerScoreDigits[1][2].update(dt);
+      playerScoreDigits[1][3].update(dt);
     }
 
     /** A funcion that is called on each rendering frame iteration. */
