@@ -323,7 +323,14 @@ var breakout = (function () {
             }
           } else {
             if (playerBallIndex[activePlayer] == 3) {
-              // TODO ... end the game ...
+              // game ended; stretch the paddle and make ball to bounce around.
+              paddle.width = (canvas.width - rightWall.width - leftWall.width);
+              paddle.x = rightWall.width;
+              paddle.extent[0] = (paddle.width / 2);
+              paddle.center[0] = (paddle.x + paddle.extent[0]);
+              this.velocity = this.INITIAL_VELOCITY;
+              this.visible = true;
+              this.state = STATE_END_GAME;
             } else {
               playerBallIndex[activePlayer]++;
               playerBallIndexDigit.value = playerBallIndex[activePlayer];
