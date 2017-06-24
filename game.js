@@ -218,7 +218,7 @@ var breakout = (function () {
       /** The initial velocity for the ball.  */
       var INITIAL_VELOCITY = 0.4;
       /** The amount of velocity to increment of each increase. */
-      var VELOCITY_INCREMENT_STEP = 0.2;
+      var VELOCITY_INCREMENT_STEP = 0.15;
 
       /**
        * A utility function to create an initial random direction for the ball.
