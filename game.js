@@ -234,24 +234,33 @@ var breakout = (function () {
         }
       }
 
+      var STATE_NORMAL = 0;
+      var STATE_BRICK_HIT = 1;
+      var STATE_END_GAME = 2;
+
       Movable.call(this, x, y, width, height);
       this.velocity = INITIAL_VELOCITY;
       this.direction = createRandomInitDirection();
+      this.state = STATE_NORMAL;
       this.update = function (dt) {
         if (this.direction[1] < 0.0 && this.collides(topWall)) {
           this.direction[1] = -this.direction[1];
+          this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
         }
         if (this.direction[0] < 0.0 && this.collides(leftWall)) {
           this.direction[0] = -this.direction[0];
+          this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
         }
         if (this.direction[0] > 0.0 && this.collides(rightWall)) {
           this.direction[0] = -this.direction[0];
+          this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
         }
         if (this.direction[1] > 0.0 && this.collides(paddle)) {
           var xDiff = (this.center[0] - paddle.center[0]);
           this.direction[0] = xDiff / (paddle.width / 2);
           this.direction[1] = -this.direction[1];
           this.direction = normalize(this.direction);
+          this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
         }
         if (this.direction[1] > 0.0 && this.collides(outOfBoundsDetector)) {
           // reset the ball state and randomize a new direction.
@@ -261,6 +270,7 @@ var breakout = (function () {
           this.center[1] = (canvas.height / 2);
           this.velocity = INITIAL_VELOCITY;
           this.direction = createRandomInitDirection();
+          this.state = STATE_NORMAL;
 
           if (players == 2) {
             // TODO handle two player game logics separately.
@@ -273,28 +283,33 @@ var breakout = (function () {
             }
           }
           // TODO add a timeout before the ball launches again.
-        } else {
+        } else if (this.state != STATE_BRICK_HIT) {
           // check whether the ball intersects with the court bricks.
           var bricks = playerBricks[activePlayer][playerLevel[activePlayer]];
           for (var i = 0; i < bricks.length; i++) {
             if (this.collides(bricks[i])) {
-              // disable the brick from the level.
-              bricks[i].visible = false;
-              bricks[i].enabled = false;
+              if (this.state != STATE_END_GAME) {
+                // disable the brick from the level.
+                bricks[i].visible = false;
+                bricks[i].enabled = false;
 
-              // perform actions based on the color of the brick we just hit.
-              if (bricks[i].fillStyle == BRICKS_1_FILL_STYLE) {
-                playerScores[activePlayer] += 1;
-              } else if (bricks[i].fillStyle == BRICKS_2_FILL_STYLE) {
-                playerScores[activePlayer] += 3;
-              } else if (bricks[i].fillStyle == BRICKS_3_FILL_STYLE) {
-                playerScores[activePlayer] += 5;
-              } else if (bricks[i].fillStyle == BRICKS_4_FILL_STYLE) {
-                playerScores[activePlayer] += 7;
+                // perform actions based on the color of the brick we just hit.
+                if (bricks[i].fillStyle == BRICKS_1_FILL_STYLE) {
+                  playerScores[activePlayer] += 1;
+                } else if (bricks[i].fillStyle == BRICKS_2_FILL_STYLE) {
+                  playerScores[activePlayer] += 3;
+                } else if (bricks[i].fillStyle == BRICKS_3_FILL_STYLE) {
+                  playerScores[activePlayer] += 5;
+                } else if (bricks[i].fillStyle == BRICKS_4_FILL_STYLE) {
+                  playerScores[activePlayer] += 7;
+                }
+
+                // refresh the currently active players score.
+                refreshPlayerScoreDigits(activePlayer);
+
+                // change the ball state to require a paddle or wall hit next.
+                this.state = STATE_BRICK_HIT;
               }
-
-              // refresh the currently active players score.
-              refreshPlayerScoreDigits(activePlayer);
 
               // determine the reflection direction based on the collision side.
               this.direction[1] = -this.direction[1];
