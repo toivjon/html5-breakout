@@ -274,6 +274,20 @@ var breakout = (function () {
               bricks[i].visible = false;
               bricks[i].enabled = false;
 
+              // perform actions based on the color of the brick we just hit.
+              if (bricks[i].fillStyle == "yellow") {
+                playerScores[activePlayer] += 1;
+              } else if (bricks[i].fillStyle == "green") {
+                playerScores[activePlayer] += 3;
+              } else if (bricks[i].fillStyle == "orange") {
+                playerScores[activePlayer] += 5;
+              } else if (bricks[i].fillStyle == "red") {
+                playerScores[activePlayer] += 7;
+              }
+
+              // refresh the currently active players score.
+              refreshPlayerScoreDigits(activePlayer);
+
               // determine the reflection direction based on the collision side.
               this.direction[1] = -this.direction[1];
               break;
@@ -281,6 +295,33 @@ var breakout = (function () {
           }
         }
         this.move(dt);
+      }
+    }
+
+    /**
+     * Refresh the target player score digits.
+     *
+     * This function is used to refresh the number shown with a four digit
+     * group near the top of the screen. All digits are individual numbers
+     * that must be separately updated to show the actual score in a user
+     * friendly way. Both players have 4 digits to show the player score.
+     * One digit (thousand digit) is being hidden until it is required.
+     *
+     * @param {*} playerIdx The index of the player to score to be refreshed.
+     */
+    function refreshPlayerScoreDigits(playerIdx) {
+      // get the target player score in a string presentation.
+      var scoreString = playerScores[playerIdx].toString();
+
+      // ensure that the "secret" fourth number gets visible if required.
+      if (scoreString.length == 4) {
+        playerScoreDigits[playerIdx][0].visible = true;
+      }
+
+      // assign score values to corresponding player score digits.
+      for (var i = 0; i < scoreString.length; i++) {
+        var value = parseInt(scoreString.charAt((scoreString.length - 1) - i));
+        playerScoreDigits[playerIdx][3 - i].value = value;
       }
     }
 
@@ -487,6 +528,8 @@ var breakout = (function () {
     var playerLevel = [0, 0];
     /** A definition of the current ball index for both players. */
     var playerBallIndex = [1, 1];
+    /** The player scores. */
+    var playerScores = [0, 0];
 
     /** A function that is called when the game enters this scene. */
     function enter() {
