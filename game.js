@@ -8,6 +8,8 @@ var breakout = (function () {
   var KEY_RIGHT = 39;
   /** A constant for the left-arrow keycode. */
   var KEY_LEFT = 37;
+  /** A constatnt for the spacebar keycode. */
+  var KEY_SPACEBAR = 32;
 
   var canvas;
   var ctx;
@@ -241,12 +243,14 @@ var breakout = (function () {
       var STATE_END_GAME = 2;
 
       Movable.call(this, x, y, width, height);
-      this.velocity = INITIAL_VELOCITY;
-      this.direction = [0.0, 1.0]; // createRandomInitDirection();
+      this.velocity = 0.0;
+      this.visible = false;
+      this.direction = createRandomInitDirection();
       this.state = STATE_NORMAL;
       this.hitCounter = 0;
       this.redBricksHit = false;
       this.orangeBricksHit = false;
+      this.INITIAL_VELOCITY = INITIAL_VELOCITY;
       this.incrementHitCount = function () {
         this.hitCounter++;
         if (this.hitCounter == 4 || this.hitCounter == 12) {
@@ -261,7 +265,8 @@ var breakout = (function () {
         this.y = (canvas.height / 2) - this.extent[1];
         this.center[0] = (canvas.width / 2);
         this.center[1] = (canvas.height / 2);
-        this.velocity = INITIAL_VELOCITY;
+        this.velocity = 0;
+        this.visible = false;
         this.direction = createRandomInitDirection();
         this.state = STATE_NORMAL;
         this.hitCounter = 0;
@@ -269,6 +274,9 @@ var breakout = (function () {
         this.orangeBricksHit = false;
       };
       this.update = function (dt) {
+        // skip update functionality if the ball is not visible.
+        if (this.visible == false) return;
+
         if (this.direction[1] < 0.0 && this.collides(topWall)) {
           this.direction[1] = -this.direction[1];
           this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
@@ -444,8 +452,9 @@ var breakout = (function () {
         if (this.width != this.originalWidth) {
           this.width = this.originalWidth;
           this.extent[0] = (this.width / 2);
-          this.x = (this.center[0] - this.extent[0]);
         }
+        this.x = (canvas.width / 2) - this.extent[0];
+        this.center[0] = this.x + this.extent[0];
       }
       this.update = function (dt) {
         this.move(dt);
@@ -817,6 +826,12 @@ var breakout = (function () {
           break;
         case KEY_RIGHT:
           paddle.direction = [1.0, 0.0]
+          break;
+        case KEY_SPACEBAR:
+          if (ball.velocity == 0.0 && ball.visible == false) {
+            ball.velocity = ball.INITIAL_VELOCITY;
+            ball.visible = true;
+          }
           break;
       }
     }
