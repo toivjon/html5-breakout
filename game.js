@@ -307,8 +307,8 @@ var breakout = (function () {
           paddle.reset();
 
           if (players == 2) {
-            if (activePlayer == 2 && playerBallIndex[activePlayer] == 3) {
-              // TODO ... end the game ...
+            if (activePlayer == 1 && playerBallIndex[activePlayer] == 3) {
+              endGame();
             } else {
               // increment the currently active players ball index.
               playerBallIndex[activePlayer]++;
@@ -323,14 +323,7 @@ var breakout = (function () {
             }
           } else {
             if (playerBallIndex[activePlayer] == 3) {
-              // game ended; stretch the paddle and make ball to bounce around.
-              paddle.width = (canvas.width - rightWall.width - leftWall.width);
-              paddle.x = rightWall.width;
-              paddle.extent[0] = (paddle.width / 2);
-              paddle.center[0] = (paddle.x + paddle.extent[0]);
-              this.velocity = this.INITIAL_VELOCITY;
-              this.visible = true;
-              this.state = STATE_END_GAME;
+              endGame();
             } else {
               playerBallIndex[activePlayer]++;
               playerBallIndexDigit.value = playerBallIndex[activePlayer];
@@ -387,6 +380,24 @@ var breakout = (function () {
         }
         this.move(dt);
       }
+    }
+
+    /**
+     * End the current game.
+     *
+     * Ending the game will stretch the player paddle to 100% of the paddle
+     * movement range width and make the ball to bounce around without breaking
+     * any bricks from the currently shown level. This is considered as the end
+     * game scene as it will not allow players to perform any actions anymore.
+     */
+    function endGame() {
+      paddle.width = (canvas.width - rightWall.width - leftWall.width);
+      paddle.x = rightWall.width;
+      paddle.extent[0] = (paddle.width / 2);
+      paddle.center[0] = (paddle.x + paddle.extent[0]);
+      this.velocity = this.INITIAL_VELOCITY;
+      this.visible = true;
+      this.state = STATE_END_GAME;
     }
 
     /**
