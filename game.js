@@ -395,9 +395,9 @@ var breakout = (function () {
       paddle.x = rightWall.width;
       paddle.extent[0] = (paddle.width / 2);
       paddle.center[0] = (paddle.x + paddle.extent[0]);
-      this.velocity = this.INITIAL_VELOCITY;
-      this.visible = true;
-      this.state = STATE_END_GAME;
+      ball.velocity = ball.INITIAL_VELOCITY;
+      ball.visible = true;
+      ball.state = ball.STATE_END_GAME;
     }
 
     /**
