@@ -299,7 +299,20 @@ var breakout = (function () {
           paddle.reset();
 
           if (players == 2) {
-            // TODO handle two player game logics separately.
+            if (activePlayer == 2 && playerBallIndex[activePlayer] == 3) {
+              // TODO ... end the game ...
+            } else {
+              // increment the currently active players ball index.
+              playerBallIndex[activePlayer]++;
+
+              // toggle the next active player index.
+              activePlayer = (activePlayer == 0 ? 1 : 0);
+              playerIndexDigit.value = (activePlayer + 1);
+              playerIndexDigit.setBlink(true);
+
+              // show the new active player ball index.
+              playerBallIndexDigit.value = playerBallIndex[activePlayer];
+            }
           } else {
             if (playerBallIndex[activePlayer] == 3) {
               // TODO ... end the game ...
@@ -906,7 +919,7 @@ var breakout = (function () {
     ctx.textAlign = "center";
 
     // set the welcome scene as the initial scene.
-    setScene(courtScene);
+    setScene(welcomeScene);
   }
 
   /**
