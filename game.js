@@ -835,6 +835,8 @@ var breakout = (function () {
       playerScoreDigits[1][1].update(dt);
       playerScoreDigits[1][2].update(dt);
       playerScoreDigits[1][3].update(dt);
+
+      playerIndexDigit.update(dt);
     }
 
     /** A funcion that is called on each rendering frame iteration. */
