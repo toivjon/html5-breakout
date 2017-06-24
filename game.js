@@ -217,6 +217,8 @@ var breakout = (function () {
     function Ball(x, y, width, height) {
       /** The initial velocity for the ball.  */
       var INITIAL_VELOCITY = 0.4;
+      /** The amount of velocity to increment of each increase. */
+      var VELOCITY_INCREMENT_STEP = 0.2;
 
       /**
        * A utility function to create an initial random direction for the ball.
@@ -240,8 +242,20 @@ var breakout = (function () {
 
       Movable.call(this, x, y, width, height);
       this.velocity = INITIAL_VELOCITY;
-      this.direction = createRandomInitDirection();
+      this.direction = [0.0, 1.0]; // createRandomInitDirection();
       this.state = STATE_NORMAL;
+      this.hitCounter = 0;
+      this.redBricksHit = false;
+      this.orangeBricksHit = false;
+      this.incrementHitCount = function () {
+        this.hitCounter++;
+        if (this.hitCounter == 4 || this.hitCounter == 12) {
+          this.incrementVelocity();
+        }
+      };
+      this.incrementVelocity = function () {
+        this.velocity += VELOCITY_INCREMENT_STEP;
+      };
       this.reset = function () {
         this.x = (canvas.width / 2) - this.extent[0];
         this.y = (canvas.height / 2) - this.extent[1];
@@ -250,19 +264,25 @@ var breakout = (function () {
         this.velocity = INITIAL_VELOCITY;
         this.direction = createRandomInitDirection();
         this.state = STATE_NORMAL;
+        this.hitCounter = 0;
+        this.redBricksHit = false;
+        this.orangeBricksHit = false;
       };
       this.update = function (dt) {
         if (this.direction[1] < 0.0 && this.collides(topWall)) {
           this.direction[1] = -this.direction[1];
           this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
+          this.incrementHitCount();
         }
         if (this.direction[0] < 0.0 && this.collides(leftWall)) {
           this.direction[0] = -this.direction[0];
           this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
+          this.incrementHitCount();
         }
         if (this.direction[0] > 0.0 && this.collides(rightWall)) {
           this.direction[0] = -this.direction[0];
           this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
+          this.incrementHitCount();
         }
         if (this.direction[1] > 0.0 && this.collides(paddle)) {
           var xDiff = (this.center[0] - paddle.center[0]);
@@ -270,6 +290,7 @@ var breakout = (function () {
           this.direction[1] = -this.direction[1];
           this.direction = normalize(this.direction);
           this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
+          this.incrementHitCount();
         }
         if (this.direction[1] > 0.0 && this.collides(outOfBoundsDetector)) {
           // reset the ball state and randomize a new direction.
@@ -303,8 +324,16 @@ var breakout = (function () {
                   playerScores[activePlayer] += 3;
                 } else if (bricks[i].fillStyle == BRICKS_3_FILL_STYLE) {
                   playerScores[activePlayer] += 5;
+                  if (this.orangeBricksHit == false) {
+                    this.incrementVelocity();
+                    this.orangeBricksHit = true;
+                  }
                 } else if (bricks[i].fillStyle == BRICKS_4_FILL_STYLE) {
                   playerScores[activePlayer] += 7;
+                  if (this.redBricksHit == false) {
+                    this.incrementVelocity();
+                    this.redBricksHit = true;
+                  }
                 }
 
                 // refresh the currently active players score.
@@ -312,6 +341,9 @@ var breakout = (function () {
 
                 // change the ball state to require a paddle or wall hit next.
                 this.state = STATE_BRICK_HIT;
+
+                // increment the hit-count.
+                this.incrementHitCount();
               }
 
               // determine the reflection direction based on the collision side.
