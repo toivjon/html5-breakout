@@ -242,6 +242,15 @@ var breakout = (function () {
       this.velocity = INITIAL_VELOCITY;
       this.direction = createRandomInitDirection();
       this.state = STATE_NORMAL;
+      this.reset = function () {
+        this.x = (canvas.width / 2) - this.extent[0];
+        this.y = (canvas.height / 2) - this.extent[1];
+        this.center[0] = (canvas.width / 2);
+        this.center[1] = (canvas.height / 2);
+        this.velocity = INITIAL_VELOCITY;
+        this.direction = createRandomInitDirection();
+        this.state = STATE_NORMAL;
+      };
       this.update = function (dt) {
         if (this.direction[1] < 0.0 && this.collides(topWall)) {
           this.direction[1] = -this.direction[1];
@@ -264,13 +273,7 @@ var breakout = (function () {
         }
         if (this.direction[1] > 0.0 && this.collides(outOfBoundsDetector)) {
           // reset the ball state and randomize a new direction.
-          this.x = (canvas.width / 2) - this.extent[0];
-          this.y = (canvas.height / 2) - this.extent[1];
-          this.center[0] = (canvas.width / 2);
-          this.center[1] = (canvas.height / 2);
-          this.velocity = INITIAL_VELOCITY;
-          this.direction = createRandomInitDirection();
-          this.state = STATE_NORMAL;
+          this.reset();
 
           if (players == 2) {
             // TODO handle two player game logics separately.
