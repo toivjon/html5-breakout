@@ -142,7 +142,7 @@ var breakout = (function () {
       this.draw = function () {
         if (this.visible == true) {
           ctx.fillStyle = this.fillStyle;
-          ctx.fillRect(this.x, this.y, width, height);
+          ctx.fillRect(this.x, this.y, this.width, this.height);
         }
       }
     }
@@ -273,6 +273,7 @@ var breakout = (function () {
           this.direction[1] = -this.direction[1];
           this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
           this.incrementHitCount();
+          paddle.shrink();
         }
         if (this.direction[0] < 0.0 && this.collides(leftWall)) {
           this.direction[0] = -this.direction[0];
@@ -293,8 +294,9 @@ var breakout = (function () {
           this.incrementHitCount();
         }
         if (this.direction[1] > 0.0 && this.collides(outOfBoundsDetector)) {
-          // reset the ball state and randomize a new direction.
+          // reset the ball and paddle states and randomize a new direction.
           this.reset();
+          paddle.reset();
 
           if (players == 2) {
             // TODO handle two player game logics separately.
@@ -394,7 +396,22 @@ var breakout = (function () {
     function Paddle(x, y, width, height) {
       Movable.call(this, x, y, width, height);
       this.fillStyle = "cyan";
-      this.velocity = 0.5;
+      this.velocity = 0.7;
+      this.originalWidth = width;
+      this.shrink = function () {
+        if (this.width == this.originalWidth) {
+          this.width = (this.width / 2);
+          this.extent[0] = (this.width / 2);
+          this.x = (this.center[0] - this.extent[0]);
+        }
+      };
+      this.reset = function () {
+        if (this.width != this.originalWidth) {
+          this.width = this.originalWidth;
+          this.extent[0] = (this.width / 2);
+          this.x = (this.center[0] - this.extent[0]);
+        }
+      }
       this.update = function (dt) {
         this.move(dt);
         if (this.direction[0] < 0.0 && this.collides(leftWall)) {
