@@ -328,7 +328,6 @@ var breakout = (function () {
               playerBallIndexDigit.value = playerBallIndex[activePlayer];
             }
           }
-          // TODO add a timeout before the ball launches again.
         } else if (this.state != this.STATE_BRICK_HIT) {
           // check whether the ball intersects with the court bricks.
           var bricks = playerBricks[activePlayer][playerLevel[activePlayer]];
