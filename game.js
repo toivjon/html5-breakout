@@ -96,6 +96,7 @@ var breakout = (function () {
     var SLOT_WIDTH_DIVISOR = 16;
     /** The divisor of the slot height related to canvas width. */
     var SLOT_HEIGHT_DIVISOR = 45;
+
     /** The fill style for the first brick group closest to paddle. */
     var BRICKS_1_FILL_STYLE = "yellow";
     /** The fill style for the second brick group. */
@@ -302,32 +303,23 @@ var breakout = (function () {
           this.state = this.STATE_NORMAL;
           this.incrementHitCount();
         }
+
+        // check whether the ball has entered so called out-of-bounds area.
+        // after the ball enters this section, it is considered as being lost.
+        // game ends i.e. goes into end animation after the last ball is used.
+        // two player games will also need to change the player index here.
         if (this.direction[1] > 0.0 && this.collides(outOfBoundsDetector)) {
-          // reset the ball and paddle states and randomize a new direction.
-          this.reset();
-          paddle.reset();
-
-          if (players == 2) {
-            if (activePlayer == 1 && playerBallIndex[activePlayer] == 3) {
+          incrementBallIndex();
+          resetBallAndPaddle();
+          if (players == 1) {
+            if (playerBallIndex[activePlayer] > 3) {
               endGame();
-            } else {
-              // increment the currently active players ball index.
-              playerBallIndex[activePlayer]++;
-
-              // toggle the next active player index.
-              activePlayer = (activePlayer == 0 ? 1 : 0);
-              playerIndexDigit.value = (activePlayer + 1);
-              playerIndexDigit.setBlink(true);
-
-              // show the new active player ball index.
-              playerBallIndexDigit.value = playerBallIndex[activePlayer];
             }
           } else {
-            if (playerBallIndex[activePlayer] == 3) {
+            if (playerBallIndex[0] > 3 && playerBallIndex[1] > 3) {
               endGame();
             } else {
-              playerBallIndex[activePlayer]++;
-              playerBallIndexDigit.value = playerBallIndex[activePlayer];
+              switchPlayer();
             }
           }
         } else if (this.state != this.STATE_BRICK_HIT) {
@@ -379,6 +371,28 @@ var breakout = (function () {
           }
         }
         this.move(dt);
+      }
+    }
+
+    function resetBallAndPaddle() {
+      ball.reset();
+      paddle.reset();
+    }
+
+    function incrementBallIndex() {
+      playerBallIndex[activePlayer]++;
+      playerBallIndexDigit.value = playerBallIndex[activePlayer];
+    }
+
+    function switchPlayer() {
+      if (playerBallIndex[activePlayer == 0 ? 1 : 0] < 4) {
+        // toggle the next active player index.
+        activePlayer = (activePlayer == 0 ? 1 : 0);
+        playerIndexDigit.value = (activePlayer + 1);
+        playerIndexDigit.setBlink(true);
+
+        // show the new active player ball index.
+        playerBallIndexDigit.value = playerBallIndex[activePlayer];
       }
     }
 
