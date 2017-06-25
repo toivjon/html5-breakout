@@ -243,11 +243,11 @@ var breakout = (function () {
       Movable.call(this, x, y, width, height);
       this.STATE_NORMAL = 0;
       this.STATE_BRICK_HIT = 1;
-      this.STATE_END_GAME = 2;
       this.velocity = 0.0;
       this.visible = false;
       this.direction = createRandomInitDirection();
       this.state = this.STATE_NORMAL;
+      this.endGameMode = false;
       this.hitCounter = 0;
       this.redBricksHit = false;
       this.orangeBricksHit = false;
@@ -280,18 +280,18 @@ var breakout = (function () {
 
         if (this.direction[1] < 0.0 && this.collides(topWall)) {
           this.direction[1] = -this.direction[1];
-          this.state = (this.state == this.STATE_END_GAME ? this.STATE_END_GAME : this.STATE_NORMAL);
+          this.state = this.STATE_NORMAL;
           this.incrementHitCount();
           paddle.shrink();
         }
         if (this.direction[0] < 0.0 && this.collides(leftWall)) {
           this.direction[0] = -this.direction[0];
-          this.state = (this.state == this.STATE_END_GAME ? this.STATE_END_GAME : this.STATE_NORMAL);
+          this.state = this.STATE_NORMAL;
           this.incrementHitCount();
         }
         if (this.direction[0] > 0.0 && this.collides(rightWall)) {
           this.direction[0] = -this.direction[0];
-          this.state = (this.state == this.STATE_END_GAME ? this.STATE_END_GAME : this.STATE_NORMAL);
+          this.state = this.STATE_NORMAL;
           this.incrementHitCount();
         }
         if (this.direction[1] > 0.0 && this.collides(paddle)) {
@@ -299,7 +299,7 @@ var breakout = (function () {
           this.direction[0] = xDiff / (paddle.width / 2);
           this.direction[1] = -this.direction[1];
           this.direction = normalize(this.direction);
-          this.state = (this.state == this.STATE_END_GAME ? this.STATE_END_GAME : this.STATE_NORMAL);
+          this.state = this.STATE_NORMAL;
           this.incrementHitCount();
         }
         if (this.direction[1] > 0.0 && this.collides(outOfBoundsDetector)) {
@@ -335,7 +335,7 @@ var breakout = (function () {
           var bricks = playerBricks[activePlayer][playerLevel[activePlayer]];
           for (var i = 0; i < bricks.length; i++) {
             if (this.collides(bricks[i])) {
-              if (this.state != this.STATE_END_GAME) {
+              if (this.endGameMode == false) {
                 // disable the brick from the level.
                 bricks[i].visible = false;
                 bricks[i].enabled = false;
@@ -365,12 +365,12 @@ var breakout = (function () {
                 // refresh the currently active players score.
                 refreshPlayerScoreDigits(activePlayer);
 
-                // change the ball state to require a paddle or wall hit next.
-                this.state = this.STATE_BRICK_HIT;
-
                 // increment the hit-count.
                 this.incrementHitCount();
               }
+
+              // change the ball state to require a paddle or wall hit next.
+              this.state = this.STATE_BRICK_HIT;
 
               // determine the reflection direction based on the collision side.
               this.direction[1] = -this.direction[1];
@@ -397,7 +397,7 @@ var breakout = (function () {
       paddle.center[0] = (paddle.x + paddle.extent[0]);
       ball.velocity = ball.INITIAL_VELOCITY;
       ball.visible = true;
-      ball.state = ball.STATE_END_GAME;
+      ball.endGameMode = true;
     }
 
     /**
