@@ -324,7 +324,8 @@ var breakout = (function () {
           }
         } else if (this.state != this.STATE_BRICK_HIT) {
           // check whether the ball intersects with the court bricks.
-          var bricks = playerBricks[activePlayer][playerLevel[activePlayer]];
+          var currentLevel = playerLevel[activePlayer];
+          var bricks = playerBricks[activePlayer][currentLevel];
           for (var i = 0; i < bricks.length; i++) {
             if (this.collides(bricks[i])) {
               if (this.endGameMode == false) {
@@ -359,6 +360,38 @@ var breakout = (function () {
 
                 // increment the hit-count.
                 this.incrementHitCount();
+
+                // calculate the amount of destroyed bricks.
+                var destroyedBricks = 0;
+                for (var j = 0; j < bricks.length; j++) {
+                  if (bricks[j].visible == false) {
+                    destroyedBricks++;
+                  }
+                }
+
+                // check whether the end of this level has been reached.
+                // this requires that the player just destroyed the last brick.
+                // we need to goto next level or check whether to end the game.
+                if (destroyedBricks == bricks.length) {
+                  resetBallAndPaddle();
+                  if ((currentLevel + 1) >= playerBricks[activePlayer].length) {
+                    playerBallIndex[activePlayer] = 4;
+                  } else {
+                    playerLevel[activePlayer]++;
+                  }
+                  if (players == 1) {
+                    if (playerBallIndex[activePlayer] > 3) {
+                      endGame();
+                    }
+                  } else {
+                    if (playerBallIndex[0] > 3 && playerBallIndex[1] > 3) {
+                      endGame();
+                    } else if (playerBallIndex[activePlayer] > 3) {
+                      switchPlayer();
+                    }
+                  }
+                  return;
+                }
               }
 
               // change the ball state to require a paddle or wall hit next.
