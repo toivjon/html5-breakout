@@ -238,15 +238,14 @@ var breakout = (function () {
         }
       }
 
-      var STATE_NORMAL = 0;
-      var STATE_BRICK_HIT = 1;
-      var STATE_END_GAME = 2;
-
       Movable.call(this, x, y, width, height);
+      this.STATE_NORMAL = 0;
+      this.STATE_BRICK_HIT = 1;
+      this.STATE_END_GAME = 2;
       this.velocity = 0.0;
       this.visible = false;
       this.direction = createRandomInitDirection();
-      this.state = STATE_NORMAL;
+      this.state = this.STATE_NORMAL;
       this.hitCounter = 0;
       this.redBricksHit = false;
       this.orangeBricksHit = false;
@@ -268,7 +267,7 @@ var breakout = (function () {
         this.velocity = 0;
         this.visible = false;
         this.direction = createRandomInitDirection();
-        this.state = STATE_NORMAL;
+        this.state = this.STATE_NORMAL;
         this.hitCounter = 0;
         this.redBricksHit = false;
         this.orangeBricksHit = false;
@@ -279,18 +278,18 @@ var breakout = (function () {
 
         if (this.direction[1] < 0.0 && this.collides(topWall)) {
           this.direction[1] = -this.direction[1];
-          this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
+          this.state = (this.state == this.STATE_END_GAME ? this.STATE_END_GAME : this.STATE_NORMAL);
           this.incrementHitCount();
           paddle.shrink();
         }
         if (this.direction[0] < 0.0 && this.collides(leftWall)) {
           this.direction[0] = -this.direction[0];
-          this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
+          this.state = (this.state == this.STATE_END_GAME ? this.STATE_END_GAME : this.STATE_NORMAL);
           this.incrementHitCount();
         }
         if (this.direction[0] > 0.0 && this.collides(rightWall)) {
           this.direction[0] = -this.direction[0];
-          this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
+          this.state = (this.state == this.STATE_END_GAME ? this.STATE_END_GAME : this.STATE_NORMAL);
           this.incrementHitCount();
         }
         if (this.direction[1] > 0.0 && this.collides(paddle)) {
@@ -298,7 +297,7 @@ var breakout = (function () {
           this.direction[0] = xDiff / (paddle.width / 2);
           this.direction[1] = -this.direction[1];
           this.direction = normalize(this.direction);
-          this.state = (this.state == STATE_END_GAME ? STATE_END_GAME : STATE_NORMAL);
+          this.state = (this.state == this.STATE_END_GAME ? this.STATE_END_GAME : this.STATE_NORMAL);
           this.incrementHitCount();
         }
         if (this.direction[1] > 0.0 && this.collides(outOfBoundsDetector)) {
@@ -330,12 +329,12 @@ var breakout = (function () {
             }
           }
           // TODO add a timeout before the ball launches again.
-        } else if (this.state != STATE_BRICK_HIT) {
+        } else if (this.state != this.STATE_BRICK_HIT) {
           // check whether the ball intersects with the court bricks.
           var bricks = playerBricks[activePlayer][playerLevel[activePlayer]];
           for (var i = 0; i < bricks.length; i++) {
             if (this.collides(bricks[i])) {
-              if (this.state != STATE_END_GAME) {
+              if (this.state != this.STATE_END_GAME) {
                 // disable the brick from the level.
                 bricks[i].visible = false;
                 bricks[i].enabled = false;
@@ -366,7 +365,7 @@ var breakout = (function () {
                 refreshPlayerScoreDigits(activePlayer);
 
                 // change the ball state to require a paddle or wall hit next.
-                this.state = STATE_BRICK_HIT;
+                this.state = this.STATE_BRICK_HIT;
 
                 // increment the hit-count.
                 this.incrementHitCount();
