@@ -11,13 +11,15 @@ var breakout = (function () {
   /** A constatnt for the spacebar keycode. */
   var KEY_SPACEBAR = 32;
 
+  /** A constant definition for the game framerate. */
+  var FPS = (1000.0 / 60.0);
+
   var canvas;
   var ctx;
   var scene;
   var players;
   var prevTickTime;
   var deltaAccumulator = 0.0;
-  var FPS = (1000.0 / 60.0);
 
   // ==========================================================================
 
