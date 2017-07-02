@@ -615,7 +615,7 @@ var breakout = (function () {
       /** Horizontal line draw instructions. */
       var hlines = [];
       hlines[HLINE_TOP] = [x, y, width, thickness];
-      hlines[HLINE_MIDDLE] = [x, y + halfHeight- thickness / 2, width, thickness];
+      hlines[HLINE_MIDDLE] = [x - 1, y + halfHeight- thickness / 2, width + 2, thickness];
       hlines[HLINE_BOTTOM] = [x, y + (height - thickness), width, thickness];
 
       /** Vertical line draw instructions. */
