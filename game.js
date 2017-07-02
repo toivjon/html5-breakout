@@ -1,3 +1,20 @@
+/**
+ * A simple and traditional Breakout game implementation for the HTML5.
+ *
+ * This game is a HTML5 version of the old and legendary Breakout game, which
+ * was release in 1976 by Atari Inc. This version uses the 2D drawing context
+ * from the HTML5 canvas element to draw items on the screen. Game also uses
+ * two different scenes, which also act as the states of the game. These scenes
+ * are following:
+ *
+ * 1. Welcome
+ * 2. Court
+ *
+ * Welcome scene contains the welcoming message and a selection whether to play
+ * a single/multiplayer game and the court scene has the game implementation.
+ *
+ * @author J. Toiviainen
+ */
 var breakout = (function () {
 
   /** A constant for the number one keycode. */
@@ -8,7 +25,7 @@ var breakout = (function () {
   var KEY_RIGHT = 39;
   /** A constant for the left-arrow keycode. */
   var KEY_LEFT = 37;
-  /** A constatnt for the spacebar keycode. */
+  /** A constant for the spacebar keycode. */
   var KEY_SPACEBAR = 32;
 
   /** A constant definition for the game framerate. */
@@ -90,6 +107,13 @@ var breakout = (function () {
 
   // ==========================================================================
 
+  /**
+   * The court scene for the Breakout application.
+   *
+   * This is the main game scene where the game simulation will be processed.
+   * It contains all the logics required to move game entities and to make the
+   * game act as a "game". This is the biggest scene from the two scenes.
+   */
   var courtScene = (function () {
 
     /** The divisor of the slot width related to canvas width. */
