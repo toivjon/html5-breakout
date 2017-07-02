@@ -1033,6 +1033,11 @@ var breakout = (function () {
       throw Error("Unable to find the required canvas element.");
     }
 
+    // resize the canvas based on the available browser available draw size.
+    // this ensures that a full screen window can contain the whole game view.
+    canvas.height = (window.screen.availHeight - 100);
+    canvas.width = (canvas.height * 0.8);
+
     // get a reference to the 2D drawing context.
     if (!(ctx = canvas.getContext("2d"))) {
       throw Error("Unable to get 2D draw context from the canvas.");
