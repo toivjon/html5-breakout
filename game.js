@@ -71,12 +71,15 @@ var breakout = (function () {
 
       // draw the application name string.
       ctx.font = "32pt Arial";
-      ctx.fillText("HTML5 BREAKOUT", center[0], center[1] - 100);
+      ctx.fillText("HTML5 BREAKOUT", center[0], center[1] - 200);
 
       // draw the number of players selection instruction strings.
       ctx.font = "24pt Arial";
-      ctx.fillText("Press [1] to start a single player game.", center[0], center[1]);
-      ctx.fillText("Press [2] to start a two player game.", center[0], center[1] + 50);
+      ctx.fillText("Controls:", center[0], center[1] - 100);
+      ctx.fillText("use spacebar to launch a ball.", center[0], center[1] - 50);
+      ctx.fillText("use arrow keys to move the paddle left and right.", center[0], center[1]);
+      ctx.fillText("Press [1] to start a single player game.", center[0], center[1] + 100);
+      ctx.fillText("Press [2] to start a two player game.", center[0], center[1] + 150);
     }
 
     /**
