@@ -340,6 +340,21 @@ var breakout = (function () {
               endGame();
             }
           } else {
+            // hidden special case, which may occur only in two player games.
+            // here an additional level is added to second player levels if
+            // the first player has completed the first level with the third
+            // ball and whether the ball gets off-the-screen immediately by
+            // not hiting any bricks before. This hidden speciality allows
+            // the second player to achieve the maximum of 1344 points instead
+            // of the normal 896 points, which is available with two levels.
+            if (activePlayer == 0) {
+              if (playerBallIndex[activePlayer] > 3) {
+                if (playerLevel[activePlayer] == 1) {
+                  playerBricks[1].push(playerBricks[0][1]);
+                }
+              }
+            }
+
             if (playerBallIndex[0] > 3 && playerBallIndex[1] > 3) {
               endGame();
             } else {
