@@ -609,19 +609,21 @@ var breakout = (function () {
 
       /** The thickness used to draw the borders of the numbers. */
       var thickness = (height / 5);
+      /** A precalculation for the half-height fixed with a 1 pixel. */
+      var halfHeight = Math.ceil(height / 2) - 1;
 
       /** Horizontal line draw instructions. */
       var hlines = [];
       hlines[HLINE_TOP] = [x, y, width, thickness];
-      hlines[HLINE_MIDDLE] = [x, y + (height / 2) - thickness / 2, width, thickness];
+      hlines[HLINE_MIDDLE] = [x, y + halfHeight- thickness / 2, width, thickness];
       hlines[HLINE_BOTTOM] = [x, y + (height - thickness), width, thickness];
 
       /** Vertical line draw instructions. */
       var vlines = [];
-      vlines[VLINE_LEFT_TOP] = [x, y, thickness, Math.ceil(height / 2)];
-      vlines[VLINE_LEFT_BOTTOM] = [x, y + height / 2, thickness, height / 2];
-      vlines[VLINE_RIGHT_TOP] = [Math.ceil(x + width - thickness), y, thickness, Math.ceil(height / 2)];
-      vlines[VLINE_RIGHT_BOTTOM] = [Math.ceil(x + width - thickness), y + height / 2, thickness, height / 2];
+      vlines[VLINE_LEFT_TOP] = [x - 1, y, thickness, halfHeight + 1];
+      vlines[VLINE_LEFT_BOTTOM] = [x - 1, y + halfHeight, thickness, halfHeight + 1];
+      vlines[VLINE_RIGHT_TOP] = [x + width - thickness, y, thickness + 1, halfHeight + 1];
+      vlines[VLINE_RIGHT_BOTTOM] = [x + width - thickness, y + halfHeight, thickness + 1, halfHeight + 1];
       vlines[VLINE_CENTER] = [x + width / 2 - thickness, y, thickness, height];
 
       /** The amount of times to blink when blink is activated. */
