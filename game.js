@@ -76,10 +76,11 @@ var breakout = (function () {
       // draw the number of players selection instruction strings.
       ctx.font = "24pt Arial";
       ctx.fillText("Controls:", center[0], center[1] - 100);
-      ctx.fillText("use spacebar to launch a ball.", center[0], center[1] - 50);
-      ctx.fillText("use arrow keys to move the paddle left and right.", center[0], center[1]);
-      ctx.fillText("Press [1] to start a single player game.", center[0], center[1] + 100);
-      ctx.fillText("Press [2] to start a two player game.", center[0], center[1] + 150);
+      ctx.fillText("[spacebar] launch a ball", center[0], center[1] - 50);
+      ctx.fillText("[left-arrow] move left", center[0], center[1]);
+      ctx.fillText("[right-arrow] move right", center[0], center[1] + 50);
+      ctx.fillText("Press [1] to start a 1 player game", center[0], center[1] + 150);
+      ctx.fillText("Press [2] to start a 2 player game", center[0], center[1] + 200);
     }
 
     /**
