@@ -248,9 +248,9 @@ var breakout = (function () {
      */
     function Ball(x, y, width, height) {
       /** The initial velocity for the ball.  */
-      var INITIAL_VELOCITY = 0.4;
+      var INITIAL_VELOCITY = canvas.height / 2370;
       /** The amount of velocity to increment of each increase. */
-      var VELOCITY_INCREMENT_STEP = 0.15;
+      var VELOCITY_INCREMENT_STEP = canvas.height / 6330;
 
       /**
        * A utility function to create an initial random direction for the ball.
@@ -546,7 +546,7 @@ var breakout = (function () {
     function Paddle(x, y, width, height) {
       Movable.call(this, x, y, width, height);
       this.fillStyle = "cyan";
-      this.velocity = 0.7;
+      this.velocity = (canvas.height / 1350);
       this.originalWidth = width;
       this.shrink = function () {
         if (this.width == this.originalWidth) {
