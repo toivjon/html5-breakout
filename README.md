@@ -30,5 +30,5 @@ This Breakout implementation contains the following features.
 * Supports the hidden extra level like the one in the original game. See game.js comment lines 347-353 for more details.
 
 ## Screenshots
-![alt text](https://github.com/toivjon/html5-pong/blob/master/Screenshots/welcome-scene.png "WelcomeScene")
-![alt text](https://github.com/toivjon/html5-pong/blob/master/Screenshots/court-scene.png "CourtScene")
+![alt text](https://github.com/toivjon/html5-breakout/blob/master/Screenshots/welcome-scene.png "WelcomeScene")
+![alt text](https://github.com/toivjon/html5-breakout/blob/master/Screenshots/court-scene.png "CourtScene")
