@@ -5,6 +5,8 @@ Contains game modes for a one and two player games.
 
 The game is playable in the URL: https://toivjon.github.io/html5-breakout/
 
+Development blog entry: https://toivjon.wordpress.com/2017/07/08/html5-breakout/
+
 ## Scenes
 Game is split into following scenes:
 1. A welcome scene, which contains the main menu.
